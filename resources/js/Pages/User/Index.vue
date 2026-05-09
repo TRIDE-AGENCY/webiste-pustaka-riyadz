@@ -1672,61 +1672,6 @@ export default {
     padding-top: 1.5rem;
 }
 
-.service-bootstrap-modal .modal-dialog {
-    max-width: min(800px, calc(100% - 1.5rem));
-}
-
-.service-bootstrap-modal .modal-body {
-    overflow: hidden;
-}
-
-.service-modal-panel {
-    position: relative;
-    width: 100%;
-    max-height: calc(100vh - 3rem);
-    border: 1px solid rgba(226, 232, 240, 0.95);
-    border-radius: 8px;
-    background: #ffffff;
-    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.24);
-    overflow: hidden;
-}
-
-.service-modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    z-index: 3;
-    width: 42px;
-    height: 42px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(226, 232, 240, 0.95);
-    border-radius: 8px;
-    background: #ffffff;
-    color: var(--slate-600);
-    cursor: pointer;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.service-modal-close:focus-visible {
-    outline: 2px solid var(--base-color-500);
-    outline-offset: 2px;
-}
-
-.service-modal-close:hover {
-    background: #fff7ed;
-    color: var(--base-color-600);
-    transform: translateY(-1px);
-}
-
-.service-modal-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    max-height: calc(100vh - 3rem);
-}
-
 .service-modal-media {
     display: flex;
     align-items: flex-start;
@@ -2214,10 +2159,21 @@ export default {
     }
 
     .book-modal-panel,
-    .book-modal-grid,
-    .service-modal-panel,
+    .book-modal-grid {
+        max-height: none;
+    }
+
+    .service-modal-panel {
+        max-height: calc(100vh - 1.5rem);
+        max-height: calc(100dvh - 1.5rem);
+    }
+
     .service-modal-grid {
         max-height: none;
+    }
+
+    .service-bootstrap-modal .modal-body {
+        overflow-y: auto;
     }
 
     .book-modal-grid,
@@ -2247,6 +2203,10 @@ export default {
     .book-modal-content,
     .service-modal-content {
         max-height: none;
+    }
+
+    .service-modal-content {
+        overflow: visible;
     }
 }
 
@@ -2298,10 +2258,19 @@ export default {
         margin: 0;
     }
 
-    .book-modal-panel,
-    .service-modal-panel {
+    .book-modal-panel {
         width: 100%;
         min-height: 100vh;
+        border-radius: 0;
+    }
+
+    .service-modal-panel {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        max-height: 100vh;
+        max-height: 100dvh;
         border-radius: 0;
     }
 

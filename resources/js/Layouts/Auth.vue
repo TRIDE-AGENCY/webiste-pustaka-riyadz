@@ -4,7 +4,7 @@
             <a href="/">
                 <img alt="Logo" 
                     :src="`/storage/${setting.site_favicon}`" 
-                    class="h-60px" />
+                    class="h-70px" />
             </a>
         </div>
         <div class="d-flex flex-column flex-column-fluid flex-center p-10">

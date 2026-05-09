@@ -19,43 +19,43 @@
                 <div class="container px-lg-0">
                     <div class="py-6 d-flex align-items-center justify-content-between position-relative">
     
-                        <a href="/" class="d-flex align-items-center gap-4">
-                            <img :alt="`Logo ${setting.site_title}`" :src="`/storage/${setting.site_logo}`" class="h-50px h-md-60px" />
+                        <a href="/" @click.prevent="navigateHome" class="d-flex align-items-center gap-4">
+                            <img :alt="`Logo ${setting.site_title}`" :src="`/storage/${setting.site_logo}`" class="h-30px h-md-40px" />
                             <!-- <span style="font-weight: 800;" class="lh-sm mw-150px text-uppercase fs-3 text-myprimary">{{ setting.site_title }}</span> -->
                         </a>
 
                         <div class="d-none d-lg-flex align-items-center gap-10 position-absolute top-50 start-50 translate-middle">
                             <a href="/"
-                                @click.prevent="goHome"
-                                :class="desktopHomeClass"
+                                @click.prevent="navigateHome"
+                                :class="isHomeActive ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 Beranda
                             </a>
                             <a href="/books" 
-                                :class="desktopRouteClass('/books')"
+                                :class="$page.url.startsWith('/books') ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 Buku
                             </a>
                             <a href="/#services"
                                 @click.prevent="navigateToSection('services')"
-                                :class="desktopSectionClass('services')"
+                                :class="isSectionActive('services') ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 Layanan
                             </a>
                             <a href="/#testimonials"
                                 @click.prevent="navigateToSection('testimonials')"
-                                :class="desktopSectionClass('testimonials')"
+                                :class="isSectionActive('testimonials') ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 Testimoni
                             </a>
                             <a href="/blogs" 
-                                :class="desktopRouteClass('/blogs')"
+                                :class="$page.url.startsWith('/blogs') ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 Blog
                             </a>
                             <a href="/#faqs"
                                 @click.prevent="navigateToSection('faqs')"
-                                :class="desktopSectionClass('faqs')"
+                                :class="isSectionActive('faqs') ? 'btn-link-myprimary fw-bolder' : 'btn-link-mytertiary-light fw-semibold'"
                                 class="fs-5">
                                 FAQ
                             </a>
@@ -64,8 +64,9 @@
                         <div class="d-flex align-items-center gap-3">
                             <a href="/#contact"
                                 @click.prevent="navigateToSection('contact')"
+                                :class="{ 'section-nav-cta-active': isSectionActive('contact') }"
                                 class="d-none d-lg-flex align-items-center gap-1 fs-5 rounded-3 btn btn-hover-icon btn-myprimary-filled fw-bolder">
-                                <span>Kirim Layanan</span>
+                                <span>Kirim Naskah</span>
                                 <i class="ri-arrow-right-up-line fw-bold fs-2 me-n3"></i>
                             </a>
                             
@@ -84,7 +85,7 @@
                 <div class="position-absolute top-0 start-0 bg-white h-100 w-300px shadow-sm d-flex flex-column animate__animated animate__slideInLeft">
                     <div class="d-flex align-items-center justify-content-between px-5 py-6 border-bottom border-gray-300">
                         <div class="d-flex align-items-center gap-4">
-                            <img :alt="`Logo ${setting.site_title}`" :src="`/storage/${setting.site_logo}`" class="h-50px h-md-60px" />
+                            <img :alt="`Logo ${setting.site_title}`" :src="`/storage/${setting.site_logo}`" class="h-30px h-md-40px" />
                             <!-- <img :alt="`Logo ${setting.site_title}`" :src="`/storage/${setting.site_logo}`" class="h-35px h-md-45px" /> -->
                             <!-- <span style="font-weight: 800;" class="lh-sm mw-150px text-uppercase fs-3 text-myprimary">{{ setting.site_title }}</span> -->
                         </div>
@@ -95,38 +96,38 @@
 
                     <div class="px-5 py-6 d-flex flex-column gap-2 overflow-auto flex-grow-1">
                         <a href="/"
-                            @click.prevent="goHome"
-                            :class="drawerHomeClass"
+                            @click.prevent="navigateHome"
+                            :class="isHomeActive ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             Beranda
                         </a>
                         <a href="/books"
                             @click="isDrawerOpen = false"
-                            :class="drawerRouteClass('/books')"
+                            :class="$page.url.startsWith('/books') ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             Buku
                         </a>
                         <a href="/#services"
                             @click.prevent="navigateToSection('services')"
-                            :class="drawerSectionClass('services')"
+                            :class="isSectionActive('services') ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             Layanan
                         </a>
                         <a href="/#testimonials"
                             @click.prevent="navigateToSection('testimonials')"
-                            :class="drawerSectionClass('testimonials')"
+                            :class="isSectionActive('testimonials') ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             Testimoni
                         </a>
                         <a href="/blogs"
                             @click="isDrawerOpen = false"
-                            :class="drawerRouteClass('/blogs')"
+                            :class="$page.url.startsWith('/blogs') ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             Blog
                         </a>
                         <a href="/#faqs"
                             @click.prevent="navigateToSection('faqs')"
-                            :class="drawerSectionClass('faqs')"
+                            :class="isSectionActive('faqs') ? 'btn-myprimary-tinted fw-bolder' : 'btn-mytertiary-ghostest fw-bold'"
                             class="text-start fs-5 px-7 py-4 btn btn-sm rounded-3">
                             FAQ
                         </a>
@@ -134,8 +135,9 @@
                     <div class="px-5 py-6 mt-auto">
                         <a href="/#contact"
                             @click.prevent="navigateToSection('contact')"
+                            :class="{ 'section-nav-cta-active': isSectionActive('contact') }"
                             class="d-flex align-items-center justify-content-between gap-1 fs-5 rounded-3 px-7 py-4 btn btn-sm btn-hover-icon btn-myprimary-filled fw-bolder">
-                            <span>Kirim Layanan</span>
+                            <span>Kirim Naskah</span>
                             <i class="ri-arrow-right-up-line fw-bold fs-2 me-n3"></i>
                         </a>
                     </div>
@@ -156,7 +158,7 @@
 </template>
 
 <script>
-    import { onMounted, onUnmounted, onUpdated, computed, nextTick, ref, watch } from "vue";
+    import { nextTick, onMounted, onUnmounted, onUpdated, computed, ref, watch } from "vue";
     import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
     export default {
@@ -182,84 +184,148 @@
             const isDrawerOpen = ref(false);
             const isSticky = ref(false);
             const isInformasiOpen = ref(false);
-            const activeSection = ref('');
-            const sectionTargets = ['services', 'testimonials', 'faqs', 'contact'];
-            let sectionScrollTimer = null;
+            const activeSection = ref('home');
+            const sectionIds = ['services', 'testimonials', 'faqs', 'contact'];
+            const pendingSectionStorageKey = 'pustaka-riyadz-pending-section';
 
-            const currentPath = computed(() => {
-                const url = page.url || '/';
-                const path = url.split('#')[0].split('?')[0];
-
-                return path || '/';
-            });
-
+            const currentPath = computed(() => (page.url || '/').split(/[?#]/)[0] || '/');
             const isHomePage = computed(() => currentPath.value === '/');
-            const isHomeNavActive = computed(() => isHomePage.value && !activeSection.value);
-            const desktopHomeClass = computed(() => {
-                return isHomeNavActive.value
-                    ? 'btn-link-myprimary fw-bolder'
-                    : 'btn-link-mytertiary-light fw-semibold';
-            });
-            const drawerHomeClass = computed(() => {
-                return isHomeNavActive.value
-                    ? 'btn-myprimary-tinted fw-bolder'
-                    : 'btn-mytertiary-ghostest fw-bold';
-            });
+            const isHomeActive = computed(() => isHomePage.value && activeSection.value === 'home');
 
-            const isSectionActive = (sectionId) => {
-                return isHomePage.value && activeSection.value === sectionId;
-            };
+            const prefersReducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-            const desktopSectionClass = (sectionId) => {
-                return isSectionActive(sectionId)
-                    ? 'btn-link-myprimary fw-bolder'
-                    : 'btn-link-mytertiary-light fw-semibold';
-            };
-
-            const drawerSectionClass = (sectionId) => {
-                return isSectionActive(sectionId)
-                    ? 'btn-myprimary-tinted fw-bolder'
-                    : 'btn-mytertiary-ghostest fw-bold';
-            };
-
-            const desktopRouteClass = (path) => {
-                return currentPath.value.startsWith(path)
-                    ? 'btn-link-myprimary fw-bolder'
-                    : 'btn-link-mytertiary-light fw-semibold';
-            };
-
-            const drawerRouteClass = (path) => {
-                return currentPath.value.startsWith(path)
-                    ? 'btn-myprimary-tinted fw-bolder'
-                    : 'btn-mytertiary-ghostest fw-bold';
-            };
-
-            const getNavigationOffset = () => {
+            const getNavbarOffset = () => {
                 const navigation = document.getElementById('navigation');
 
-                return (navigation?.offsetHeight || 0) + 18;
+                return (navigation?.offsetHeight || 0) + 16;
             };
 
             const updateActiveSection = () => {
                 if (!isHomePage.value) {
-                    activeSection.value = '';
+                    activeSection.value = 'home';
                     return;
                 }
 
-                const activationLine = getNavigationOffset() + Math.min(window.innerHeight * 0.32, 220);
-                const visibleSection = sectionTargets.find((sectionId) => {
-                    const section = document.getElementById(sectionId);
+                const activationLine = getNavbarOffset() + 48;
+                const currentSection = sectionIds.find((sectionId) => {
+                    const element = document.getElementById(sectionId);
 
-                    if (!section) {
+                    if (!element) {
                         return false;
                     }
 
-                    const rect = section.getBoundingClientRect();
+                    const rect = element.getBoundingClientRect();
 
                     return rect.top <= activationLine && rect.bottom > activationLine;
                 });
 
-                activeSection.value = visibleSection || '';
+                activeSection.value = currentSection || 'home';
+            };
+
+            const scrollToSection = (sectionId, attempt = 0) => {
+                const element = document.getElementById(sectionId);
+
+                if (!element) {
+                    if (attempt < 12) {
+                        window.setTimeout(() => scrollToSection(sectionId, attempt + 1), 80);
+                    }
+
+                    return;
+                }
+
+                const top = Math.max(0, element.getBoundingClientRect().top + window.scrollY - getNavbarOffset());
+
+                window.scrollTo({
+                    top,
+                    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+                });
+
+                activeSection.value = sectionId;
+                window.history.replaceState(null, '', `/#${sectionId}`);
+            };
+
+            const scrollToHome = () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+                });
+
+                activeSection.value = 'home';
+                window.history.replaceState(null, '', '/');
+            };
+
+            const setPendingSection = (sectionId) => {
+                window.sessionStorage?.setItem(pendingSectionStorageKey, sectionId);
+            };
+
+            const consumePendingSection = () => {
+                const sectionId = window.sessionStorage?.getItem(pendingSectionStorageKey);
+
+                if (sectionId) {
+                    window.sessionStorage?.removeItem(pendingSectionStorageKey);
+                }
+
+                return sectionIds.includes(sectionId) ? sectionId : null;
+            };
+
+            const getHashSection = () => {
+                const sectionId = window.location.hash.replace('#', '');
+
+                return sectionIds.includes(sectionId) ? sectionId : null;
+            };
+
+            const scrollFromTopToSection = (sectionId) => {
+                window.scrollTo({ top: 0, behavior: 'auto' });
+
+                window.setTimeout(() => {
+                    scrollToSection(sectionId);
+                }, 120);
+            };
+
+            const handlePendingSectionScroll = () => {
+                if (!isHomePage.value) {
+                    return;
+                }
+
+                const targetSection = consumePendingSection() || getHashSection();
+
+                if (targetSection) {
+                    scrollFromTopToSection(targetSection);
+                    return;
+                }
+
+                updateActiveSection();
+            };
+
+            const navigateHome = () => {
+                isDrawerOpen.value = false;
+
+                if (isHomePage.value) {
+                    scrollToHome();
+                    return;
+                }
+
+                router.visit('/', {
+                    preserveScroll: false,
+                });
+            };
+
+            const navigateToSection = (sectionId) => {
+                isDrawerOpen.value = false;
+
+                if (isHomePage.value) {
+                    scrollToSection(sectionId);
+                    return;
+                }
+
+                setPendingSection(sectionId);
+                router.visit('/', {
+                    preserveScroll: false,
+                });
+            };
+
+            const isSectionActive = (sectionId) => {
+                return isHomePage.value && activeSection.value === sectionId;
             };
 
             const handleScroll = () => {
@@ -267,98 +333,42 @@
                 updateActiveSection();
             };
 
-            const scrollToSection = (sectionId, behavior = 'smooth') => {
-                const section = document.getElementById(sectionId);
+            const handleHashChange = () => {
+                const targetSection = getHashSection();
 
-                if (!section) {
-                    activeSection.value = '';
-                    return;
+                if (targetSection && isHomePage.value) {
+                    scrollFromTopToSection(targetSection);
                 }
-
-                const targetTop = section.getBoundingClientRect().top + window.scrollY - getNavigationOffset();
-
-                window.scrollTo({
-                    top: Math.max(0, targetTop),
-                    behavior,
-                });
-
-                activeSection.value = sectionId;
             };
 
-            const scheduleSectionScroll = (sectionId, delay = 0) => {
-                if (sectionScrollTimer) {
-                    clearTimeout(sectionScrollTimer);
-                }
-
-                nextTick(() => {
-                    sectionScrollTimer = window.setTimeout(() => {
-                        scrollToSection(sectionId);
-                    }, delay);
-                });
-            };
-
-            const navigateToSection = (sectionId) => {
-                isDrawerOpen.value = false;
-
-                if (!sectionTargets.includes(sectionId)) {
-                    return;
-                }
-
-                if (!isHomePage.value) {
-                    router.visit('/', {
-                        preserveScroll: false,
-                        onSuccess: () => {
-                            window.scrollTo({ top: 0, behavior: 'auto' });
-                            window.history.replaceState(null, '', `/#${sectionId}`);
-                            scheduleSectionScroll(sectionId, 260);
-                        },
-                    });
-                    return;
-                }
-
-                window.history.replaceState(null, '', `/#${sectionId}`);
-                scheduleSectionScroll(sectionId);
-            };
-
-            const goHome = () => {
-                isDrawerOpen.value = false;
-                activeSection.value = '';
-
-                if (isHomePage.value) {
-                    window.history.replaceState(null, '', '/');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    return;
-                }
-
-                router.visit('/', {
-                    preserveScroll: false,
-                    onSuccess: () => {
-                        activeSection.value = '';
-                        window.scrollTo({ top: 0, behavior: 'auto' });
-                    },
-                });
-            };
+            let removeNavigateListener = null;
 
             onMounted(() => {
                 handleScroll();
                 window.addEventListener('scroll', handleScroll, { passive: true });
+                window.addEventListener('hashchange', handleHashChange);
                 window.KTMenu?.init();
 
-                const initialSection = window.location.pathname === '/'
-                    ? window.location.hash.replace('#', '')
-                    : '';
+                removeNavigateListener = router.on('navigate', () => {
+                    isDrawerOpen.value = false;
+                    isInformasiOpen.value = false;
 
-                if (sectionTargets.includes(initialSection)) {
-                    window.scrollTo({ top: 0, behavior: 'auto' });
-                    scheduleSectionScroll(initialSection, 260);
-                }
+                    nextTick(() => {
+                        window.KTMenu?.init();
+                        handleScroll();
+                        handlePendingSectionScroll();
+                    });
+                });
+
+                nextTick(() => {
+                    handlePendingSectionScroll();
+                });
             });
 
             onUnmounted(() => {
                 window.removeEventListener('scroll', handleScroll);
-                if (sectionScrollTimer) {
-                    clearTimeout(sectionScrollTimer);
-                }
+                window.removeEventListener('hashchange', handleHashChange);
+                removeNavigateListener?.();
             });
 
             onUpdated(() => {
@@ -371,18 +381,6 @@
                 } else {
                     document.body.style.overflow = '';
                 }
-            });
-
-            watch(currentPath, () => {
-                activeSection.value = '';
-                nextTick(updateActiveSection);
-            });
-
-            router.on('navigate', () => {
-                isDrawerOpen.value = false; 
-                isInformasiOpen.value = false;
-                nextTick(updateActiveSection);
-                window.KTMenu?.init();
             });
 
             const formattedWhatsApp = computed(() => {
@@ -405,14 +403,10 @@
                 isDrawerOpen,
                 isInformasiOpen,
                 isSticky,
-                desktopHomeClass,
-                drawerHomeClass,
-                desktopRouteClass,
-                drawerRouteClass,
-                desktopSectionClass,
-                drawerSectionClass,
-                navigateToSection,
-                goHome
+                isHomeActive,
+                isSectionActive,
+                navigateHome,
+                navigateToSection
             };
         }
     }
@@ -460,5 +454,9 @@
 
     .shadow-soft {
         box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04) !important; 
+    }
+
+    .section-nav-cta-active {
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.18), 0 10px 32px rgba(249, 115, 22, 0.16) !important;
     }
 </style>

@@ -2,17 +2,17 @@
     <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar"
         data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px"
         data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
-        <div class="app-sidebar-logo px-7 border-end border-gray-300" id="kt_app_sidebar_logo">
+        <div class="app-sidebar-logo px-6 border-end border-gray-300" id="kt_app_sidebar_logo">
             <Link href="/admin/dashboard" class="d-block w-100">
                 <div class="d-flex align-items-center w-100 gap-4">
                     <img
                         :alt="`Logo ${$page.props.setting.site_title}`"
-                        :src="`/storage/${$page.props.setting.site_favicon}`"
-                        class="h-30px h-md-35px flex-shrink-0" 
+                        :src="`/storage/${$page.props.setting.site_logo}`"
+                        class="h-35px h-md-40px flex-shrink-0" 
                     />
-                    <span style="font-weight: 800; min-width: 0;" class="text-truncate-1 flex-fill fs-1 lh-sm text-myprimary">
+                    <!-- <span style="font-weight: 800; min-width: 0;" class="text-truncate-1 flex-fill fs-1 lh-sm text-myprimary">
                         {{ $page.props.setting.site_title }}
-                    </span>
+                    </span> -->
                 </div>
             </Link>
         </div>

@@ -14,7 +14,7 @@
                             :src="`/storage/${$page.props.setting.site_favicon}`"
                             class="h-30px h-md-35px"
                         />
-                        <span style="font-weight: 800;" class="text-nowrap text-truncate-1 fs-1 text-myprimary">
+                        <span style="font-weight: 900;" class="text-nowrap text-truncate-1 fs-1 text-dark">
                             {{ $page.props.setting.site_title }}
                         </span>
                     </div>
