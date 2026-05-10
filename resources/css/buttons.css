@@ -649,3 +649,12 @@
 .btn-hover-icon {
     transition: all 0.3s ease;
 }
+
+.btn-mydark {
+    background: rgba(15, 23, 42, 0.42);
+    transition: background 0.2s ease;
+}
+
+.btn-mydark:hover {
+    background: rgba(15, 23, 42, 0.7);
+}

@@ -16,7 +16,7 @@ class ManuscriptCategoryController extends Controller
                 $q->where('title', 'like', '%' . request()->q . '%')
                     ->orWhere('description', 'like', '%' . request()->q . '%');
             });
-        })->latest()->paginate(10);
+        })->oldest()->paginate(10);
 
         $manuscriptCategories->through(function ($category) {
             $category->image_url = $category->image ? asset('storage/' . $category->image) : null;

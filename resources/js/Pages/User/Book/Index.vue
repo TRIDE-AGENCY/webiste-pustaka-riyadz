@@ -42,7 +42,7 @@
                                         {{ formatPrice(book.price) }}
                                     </p>
                                 </div>
-                                <a :href="whatsappLink" target="_blank" @click.stop
+                                <a :href="bookWhatsAppLink(book)" target="_blank" rel="noopener" @click.stop
                                     class="btn btn-sm fs-5 btn-myprimary-filled rounded-3 fw-bolder d-inline-flex align-items-center gap-1">
                                     <i class="ri-whatsapp-line fs-3"></i>
                                     Pesan
@@ -127,6 +127,17 @@ export default {
         const whatsappLink = computed(() => {
             return whatsappNumber.value ? `https://wa.me/${whatsappNumber.value}` : '/#contact';
         });
+
+        const bookWhatsAppLink = (book) => {
+            if (!whatsappNumber.value) {
+                return '/#contact';
+            }
+
+            const title = book?.title || 'buku ini';
+            const message = encodeURIComponent(`Halo, saya ingin pesan buku "${title}".`);
+            return `https://wa.me/${whatsappNumber.value}?text=${message}`;
+        };
+
         const resultSummary = computed(() => {
             const from = props.books?.from || 0;
             const to = props.books?.to || 0;
@@ -181,6 +192,7 @@ export default {
             safeBooks,
             pageTitle,
             whatsappLink,
+            bookWhatsAppLink,
             resultSummary,
             handleSearch,
             clearSearch,

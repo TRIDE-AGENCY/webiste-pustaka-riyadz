@@ -85,8 +85,7 @@
                                                         <label class="required form-label fs-6">Tipe Konten</label>
                                                         <select required class="form-select rounded-3 fs-5" v-model="sec.type">
                                                             <option value="text">Teks Paragraf</option>
-                                                            <option value="list">Daftar Poin (List)</option>
-                                                            <option value="steps">Alur Berurutan (Steps)</option>
+                                                            <option value="list">Daftar Poin</option>
                                                         </select>
                                                     </div>
                                                     <div class="fv-row">

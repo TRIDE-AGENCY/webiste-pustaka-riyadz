@@ -18,7 +18,7 @@ class ServiceController extends Controller
                 $q->where('name', 'like', '%' . request()->q . '%')
                     ->orWhere('short_description', 'like', '%' . request()->q . '%');
             });
-        })->latest()->paginate(10);
+        })->oldest()->paginate(10);
 
         $services->through(function ($service) {
             $service->image_url = $service->image

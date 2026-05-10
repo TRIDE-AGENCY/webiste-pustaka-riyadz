@@ -49,6 +49,7 @@ class MainController extends Controller
 
         $blogs = Blog::where('status', 'published')
             ->latest()
+            ->limit(6)
             ->get()
             ->map(fn ($blog) => [
                 'id' => $blog->id,
@@ -71,6 +72,7 @@ class MainController extends Controller
             ]);
 
         $books = Book::latest()
+            ->limit(6)
             ->get()
             ->map(function ($book) use ($storageUrl) {
                 $images = collect($book->images)
@@ -103,7 +105,7 @@ class MainController extends Controller
 
         $services = Service::with('packages')
             ->where('is_active', true)
-            ->latest()
+            ->oldest()
             ->get()
             ->map(fn ($service) => [
                 'id' => $service->id,
@@ -127,7 +129,7 @@ class MainController extends Controller
         $services = $showWhenMinimum($services, 3);
 
         $faqs = Faq::where('status', 'published')
-            ->latest()
+            ->oldest()
             ->get()
             ->map(fn ($faq) => [
                 'id' => $faq->id,
@@ -163,7 +165,7 @@ class MainController extends Controller
 
         $advantages = $showEvenWhenMinimum($advantages, 2);
 
-        $manuscriptCategories = ManuscriptCategory::latest()
+        $manuscriptCategories = ManuscriptCategory::oldest()
             ->get()
             ->map(fn ($category) => [
                 'id' => $category->id,
@@ -173,6 +175,16 @@ class MainController extends Controller
                 'requirements' => $category->requirements ?? [],
                 'attachments' => $category->attachments ?? [],
                 'submission_method' => $category->submission_method ?? [],
+                'attached_documents' => collect($category->attached_documents ?? [])
+                    ->filter(fn ($document) => ! empty($document['path']))
+                    ->map(fn ($document) => [
+                        'name' => $document['name'] ?? basename($document['path']),
+                        'path' => $document['path'],
+                        'url' => asset('storage/' . $document['path']),
+                        'size' => $document['size'] ?? null,
+                        'extension' => $document['extension'] ?? pathinfo($document['path'], PATHINFO_EXTENSION),
+                    ])
+                    ->values(),
                 'document_count' => count($category->attached_documents ?? []),
             ]);
 

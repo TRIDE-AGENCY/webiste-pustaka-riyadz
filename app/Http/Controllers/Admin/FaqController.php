@@ -16,7 +16,7 @@ class FaqController extends Controller
                 $q->where('question', 'like', '%' . request()->q . '%')
                     ->orWhere('answer', 'like', '%' . request()->q . '%');
             });
-        })->latest()->paginate(10);
+        })->oldest()->paginate(10);
 
         $faqs->appends(['q' => request()->q]);
 

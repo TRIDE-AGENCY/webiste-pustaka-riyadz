@@ -23,7 +23,7 @@
                             <i class="ri-book-read-fill fw-normal ms-n1 fs-3 text-myprimary"></i>
                             <span class="fw-bolder">Lihat Koleksi</span>
                         </a>
-                        <a href="#" style="width: 180px;"
+                        <a :href="consultationWhatsAppLink" target="_blank" rel="noopener" style="width: 180px;"
                             class="btn btn-lg btn-myprimary-tinted rounded-3 fs-5 fw-bolder">
                             Konsultasi Gratis
                         </a>
@@ -154,7 +154,7 @@
                                             <p class="fs-3 text-dark fw-bolder mb-0 mt-1">{{ formatPrice(book.price) }}
                                             </p>
                                         </div>
-                                        <a :href="whatsappLink" target="_blank" @click.stop
+                                        <a :href="bookWhatsAppLink(book)" target="_blank" rel="noopener" @click.stop
                                             class="btn btn-sm fs-5 btn-myprimary-filled rounded-3 fw-bolder d-inline-flex align-items-center gap-1">
                                             <i class="ri-whatsapp-line fs-3"></i>
                                             Pesan
@@ -187,7 +187,7 @@
                                 buku yang lebih lengkap.
                             </p>
                         </div>
-                        <a href="#"
+                        <a :href="serviceDiscussionWhatsAppLink" target="_blank" rel="noopener"
                             class="d-none d-md-flex flex-shrink-0 btn justify-content-center btn-myprimary-filled align-items-center gap-1 rounded-3 fs-5">
                             <i class="ri-whatsapp-line fw-normal ms-n1 fs-3 text-myprimary"></i>
                             <span class="fw-bolder">Diskusi Layanan</span>
@@ -218,7 +218,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center d-md-none mt-14">
-                    <a href="#"
+                    <a :href="serviceDiscussionWhatsAppLink" target="_blank" rel="noopener"
                         class="btn btn-myprimary-filled d-flex align-items-center justify-content-center gap-1 rounded-3 fs-5">
                         <i class="ri-whatsapp-line fw-normal ms-n1 fs-3 text-myprimary"></i>
                         <span class="fw-bolder">Diskusi Layanan</span>
@@ -401,7 +401,7 @@
                                 </button>
                                 <div v-if="activeFaq === faq.id" :id="`faq-answer-${faq.id}`"
                                     class="px-6 pb-5 bg-white faq-answer">
-                                    <div class="editor-content pt-5 text-start text-gray-600 fs-6 fw-semibold lh-lg faq-answer-content"
+                                    <div class="editor-content pt-5 text-start text-dark fs-6 fw-semibold lh-lg faq-answer-content"
                                         v-html="faq.answer"></div>
                                 </div>
                             </div>
@@ -415,7 +415,7 @@
             class="container w-100 mw-1100px mx-auto mt-20 pt-20">
                 <div class="row align-items-stretch g-6 g-lg-10 pt-20">
                     <div class="col-12 col-lg-5">
-                        <div class="h-100 bg-myprimary rounded-4 p-10 p-lg-12 d-flex flex-column">
+                        <div class="bg-myprimary rounded-4 p-10 p-lg-12 d-flex flex-column">
                             <h2 class="fs-2tx text-white fw-bolder mb-5">
                                 Siap Menerbitkan Karya Anda?
                             </h2>
@@ -446,7 +446,12 @@
                         <div class="h-100">
                             <div class="row g-6">
                                 <div v-for="(category, index) in safeManuscriptCategories" :key="category.id" class="col-12">
-                                    <article class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 rounded-4">
+                                    <article
+                                        class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 rounded-4 cursor-pointer"
+                                        role="button" tabindex="0"
+                                        @click="openManuscriptCategoryModal(category)"
+                                        @keydown.enter.prevent="openManuscriptCategoryModal(category)"
+                                        @keydown.space.prevent="openManuscriptCategoryModal(category)">
                                         <img :src="category.image || '/assets/media/illustrations/img-hero.png'"
                                             :alt="category.title" class="img-fluid flex-shrink-0 w-55px h-55px shake-icon"
                                             :style="{ 'animation-delay': `${index * 1.2}s` }"
@@ -461,6 +466,10 @@
                                                 <span class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
                                                     {{ category.attachments.length }} Lampiran
                                                 </span>
+                                                <span v-if="category.document_count"
+                                                    class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
+                                                    {{ category.document_count }} Dokumen
+                                                </span>
                                             </div>
                                         </div>
                                     </article>
@@ -471,127 +480,235 @@
                 </div>
         </section>
 
-        <div id="serviceDetailModal" class="modal fade service-bootstrap-modal" tabindex="-1"
+        <div id="serviceDetailModal" class="modal fade" tabindex="-1"
             aria-labelledby="serviceDetailModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
-                <div class="modal-content service-modal-panel">
-                    <button type="button" class="service-modal-close" data-bs-dismiss="modal"
-                        aria-label="Tutup detail layanan">
-                        <i class="ri-close-line fs-2"></i>
-                    </button>
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-6 mw-600px mx-auto">
+                <div class="modal-content rounded-4">
+                    <div v-if="selectedService"
+                        class="modal-body p-2 position-relative">
+                        <button type="button" class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
+                            data-bs-dismiss="modal" aria-label="Close">
+                            <i class="cursor-pointer ri-close-large-line text-white fs-1"></i>
+                        </button>
+                        <div class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                            <img :src="selectedService.image || '/assets/media/illustrations/img-hero.png'"
+                                :alt="selectedService.name" class="img-fluid object-fit-cover w-100 h-100"
+                                @error="setFallbackImage($event, 'service')">
+                        </div>
+                        <div class="p-6 pt-8">
+                            <h2 id="serviceDetailModalTitle" class="fs-2x text-dark fw-bolder mb-3">
+                                {{ selectedService.name }}
+                            </h2>
+                            <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-0">
+                                {{ selectedService.short_description || 'Detail singkat layanan belum tersedia.' }}
+                            </p>
 
-                    <div v-if="selectedService" class="modal-body p-0">
-                        <div class="service-modal-grid">
-                            <div class="service-modal-media">
-                                <div class="service-modal-image-frame">
-                                    <img :src="selectedService.image || '/assets/media/illustrations/img-hero.png'"
-                                        :alt="selectedService.name" class="service-modal-image"
-                                        @error="setFallbackImage($event, 'service')">
+                            <div v-if="selectedServiceSections.length"
+                                class="d-flex align-items-center gap-5 mb-6 mt-7 pt-7 border-top border-gray-300">
+                                <i class="ri-service-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <div>
+                                    <h2 class="text-dark fw-bolder fs-3 mb-2">Informasi Layanan</h2>
+                                    <span class="text-gray-600 fs-5 fw-semibold">Lihat apa saja yang bisa kamu dapatkan.</span>
                                 </div>
                             </div>
-
-                            <div class="service-modal-content">
-
-                                <h2 id="serviceDetailModalTitle" class="service-modal-title text-dark fw-bolder mb-4">
-                                    {{ selectedService.name }}
-                                </h2>
-                                <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">
-                                    {{ selectedService.short_description || 'Detail singkat layanan belum tersedia.' }}
-                                </p>
-
-                                <div v-if="selectedService.description"
-                                    class="service-modal-description editor-content text-dark fs-5 fw-semibold lh-lg mb-7"
-                                    v-html="selectedService.description"></div>
-
-                                <div v-if="selectedServicePackages.length" class="service-modal-section">
-                                    <h3 class="text-dark fw-bolder fs-2 mb-4">Paket Layanan</h3>
-                                    <div class="service-modal-package-list">
-                                        <article v-for="servicePackage in selectedServicePackages"
-                                            :key="servicePackage.id || servicePackage.name"
-                                            class="service-modal-package">
-                                            <div class="d-flex align-items-start justify-content-between gap-4">
-                                                <div>
-                                                    <h4 class="text-dark fw-bolder fs-4 mb-2">
-                                                        {{ servicePackage.name }}
-                                                    </h4>
-                                                    <span v-if="servicePackage.recommendation"
-                                                        class="service-modal-package-badge">
-                                                        Rekomendasi
-                                                    </span>
-                                                </div>
-                                                <strong class="text-dark fs-4 fw-bolder text-end">
-                                                    {{ formatServicePackagePrice(servicePackage.price) }}
-                                                </strong>
-                                            </div>
-                                            <div v-if="servicePackage.features?.length"
-                                                class="mt-4 d-flex flex-column gap-2">
-                                                <div v-for="feature in servicePackage.features" :key="feature"
-                                                    class="d-flex align-items-start gap-2">
-                                                    <i class="ri-check-line text-myprimary fs-4 mt-1"></i>
-                                                    <span class="text-gray-600 fs-6 fw-semibold">{{ feature }}</span>
-                                                </div>
-                                            </div>
-                                        </article>
-                                    </div>
+                            <div v-if="selectedServiceSections.length" class="ps-18 ps-md-20">
+                                <div class="d-flex flex-column gap-6">
+                                    <article v-for="(section, index) in selectedServiceSections"
+                                        :key="section.title || index"
+                                        class="border border-gray-300 rounded-3 p-5">
+                                        <h4 class="text-dark fw-bolder fs-3 mb-4">
+                                            {{ section.title || `Konten ${index + 1}` }}
+                                        </h4>
+                                        <p v-if="section.type === 'text' && section.content"
+                                            class="text-gray-600 mt-n1 fs-5 fw-semibold lh-lg mb-0">
+                                            {{ section.content }}
+                                        </p>
+                                        <ul v-else-if="section.type === 'list' && section.items.length"
+                                            class="service-modal-list">
+                                            <li v-for="item in section.items" :key="item"
+                                                class="d-flex align-items-start gap-2">
+                                                <i style="margin-top: 2px;"
+                                                    class="ri-checkbox-circle-fill text-myprimary fs-3"></i>
+                                                <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
+                                            </li>
+                                        </ul>
+                                        <p v-else class="text-gray-600 mt-n1 fs-5 fw-semibold lh-lg mb-0">
+                                            Konten belum tersedia.
+                                        </p>
+                                    </article>
                                 </div>
-
-                                <div v-if="selectedServiceSections.length" class="service-modal-section">
-                                    <h3 class="text-dark fw-bolder fs-2 mb-4">Konten Layanan</h3>
-                                    <div class="d-flex flex-column gap-4">
-                                        <article v-for="(section, index) in selectedServiceSections"
-                                            :key="section.title || index"
-                                            class="service-modal-detail-block">
-                                            <div class="d-flex align-items-start justify-content-between gap-4 mb-3">
-                                                <h4 class="text-dark fw-bolder fs-4 mb-0">
-                                                    {{ section.title || `Konten ${index + 1}` }}
+                            </div>
+                            <div v-if="selectedService.starting_price"
+                                class="d-flex align-items-center gap-5 mt-7 pt-7 border-top border-gray-300">
+                                <i class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <div>
+                                    <span class="text-gray-600 fs-5 fw-semibold">Harga Layanan</span>
+                                    <h2 class="text-dark fw-bolder fs-3 mt-2 mb-0">{{ selectedService.starting_price }}</h2>
+                                </div>
+                            </div>
+                            <div v-if="selectedServicePackages.length"
+                                class="d-flex align-items-center gap-5 mb-6 mt-7 pt-7 border-top border-gray-300">
+                                <i class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <div>
+                                    <h2 class="text-dark fw-bolder fs-3 mb-2">Paket Layanan</h2>
+                                    <span class="text-gray-600 fs-5 fw-semibold">Sesuaikan dengan kebutuhanmu.</span>
+                                </div>
+                            </div>
+                            <div v-if="selectedServicePackages.length" class="ps-18 ps-md-20">
+                                <div class="d-flex flex-column gap-6">
+                                    <article v-for="servicePackage in selectedServicePackages"
+                                        :key="servicePackage.id || servicePackage.name"
+                                        class="border border-gray-300 rounded-3 p-5">
+                                        <div class="d-flex align-items-start justify-content-between gap-4">
+                                            <div>
+                                                <h4 class="text-dark fw-bolder fs-4 mb-2">
+                                                    {{ servicePackage.name }}
                                                 </h4>
-                                                <span class="service-modal-type-badge">
-                                                    {{ serviceSectionTypeLabel(section.type) }}
+                                                <span v-if="servicePackage.recommendation"
+                                                    class="text-gray-600 fs-5 fw-semibold">
+                                                    {{ servicePackage.recommendation }}
                                                 </span>
                                             </div>
-
-                                            <p v-if="section.type === 'text' && section.content"
-                                                class="service-modal-detail-copy text-gray-600 fs-5 fw-semibold lh-lg mb-0">
-                                                {{ section.content }}
-                                            </p>
-
-                                            <ul v-else-if="section.type === 'list' && section.items.length"
-                                                class="service-modal-list">
-                                                <li v-for="item in section.items" :key="item">
-                                                    <i class="ri-checkbox-circle-fill text-myprimary fs-3"></i>
-                                                    <span>{{ item }}</span>
-                                                </li>
-                                            </ul>
-
-                                            <ol v-else-if="section.type === 'steps' && section.items.length"
-                                                class="service-modal-steps">
-                                                <li v-for="(item, itemIndex) in section.items" :key="item">
-                                                    <span class="service-modal-step-number">{{ itemIndex + 1 }}</span>
-                                                    <span>{{ item }}</span>
-                                                </li>
-                                            </ol>
-
-                                            <p v-else class="text-gray-500 fs-6 fw-semibold mb-0">
-                                                Konten belum tersedia.
-                                            </p>
-                                        </article>
-                                    </div>
-                                </div>
-
-                                <div class="service-modal-actions">
-                                    <a :href="serviceWhatsAppLink" target="_blank"
-                                        class="btn btn-myprimary-filled btn-hover-icon rounded-3 fw-bolder fs-5 d-inline-flex align-items-center justify-content-center gap-1">
-                                        Diskusi Layanan
-                                        <i class="ri-whatsapp-line fs-3 me-n2"></i>
-                                    </a>
-                                    <button type="button"
-                                        class="btn btn-mytertiary-tinted rounded-3 fw-bolder fs-5"
-                                        data-bs-dismiss="modal">
-                                        Tutup
-                                    </button>
+                                            <strong class="text-dark fw-bolder fs-4 text-end">
+                                                {{ formatServicePackagePrice(servicePackage.price) }}
+                                            </strong>
+                                        </div>
+                                        <div v-if="servicePackage.features?.length"
+                                            class="mt-4 d-flex flex-column gap-2">
+                                            <div v-for="feature in servicePackage.features" :key="feature"
+                                                class="d-flex align-items-start gap-2">
+                                                <span class="text-gray-600 fs-5 fw-semibold">{{ feature }}</span>
+                                            </div>
+                                        </div>
+                                    </article>
                                 </div>
                             </div>
+                            <a :href="serviceWhatsAppLink" target="_blank"
+                                class="w-100 mt-8 btn justify-content-center btn-myprimary-filled align-items-center gap-2 rounded-3 fs-5">
+                                <i class="ri-whatsapp-line fw-normal fs-3 text-myprimary"></i>
+                                <span class="fw-bolder">Diskusi Layanan</span>
+                            </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="manuscriptCategoryModal" class="modal fade" tabindex="-1"
+            aria-labelledby="manuscriptCategoryModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-6 mw-600px mx-auto">
+                <div class="modal-content rounded-4">
+                    <div v-if="selectedManuscriptCategory"
+                        class="modal-body p-8 position-relative">
+                        <button type="button" class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
+                            data-bs-dismiss="modal" aria-label="Close">
+                            <i class="cursor-pointer ri-close-large-line text-white fs-1"></i>
+                        </button>
+                        <div class="ratio mx-auto mb-8 mt-2 ratio-1x1 w-100px h-100px overflow-hidden">
+                            <img :src="selectedManuscriptCategory.image || '/assets/media/illustrations/img-hero.png'"
+                                :alt="selectedManuscriptCategory.title" class="img-fluid object-fit-cover w-100 h-100"
+                                @error="setFallbackImage($event, 'default')">
+                        </div>
+                        <h2 id="manuscriptCategoryModalTitle" class="fs-2x text-dark text-center fw-bolder mb-3">
+                            {{ selectedManuscriptCategory.title }}
+                        </h2>
+                        <p class="text-gray-600 text-center fs-5 fw-semibold lh-lg mb-0">
+                            {{ selectedManuscriptCategory.description || 'Detail kategori naskah belum tersedia.' }}
+                        </p>
+
+                        <div v-if="selectedManuscriptRequirements.length"
+                            class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
+                            <i class="ri-file-check-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <div>
+                                <h2 class="text-dark fw-bolder fs-3 mb-2">Persyaratan Naskah</h2>
+                                <span class="text-gray-600 fs-5 fw-semibold">Pastikan poin berikut sudah terpenuhi.</span>
+                            </div>
+                        </div>
+                        <div v-if="selectedManuscriptRequirements.length" class="ps-17 ps-md-19">
+                            <ul class="service-modal-list">
+                                <li v-for="item in selectedManuscriptRequirements" :key="item"
+                                    class="d-flex align-items-start gap-2">
+                                    <i style="margin-top: 2px;"
+                                        class="ri-checkbox-circle-fill text-myprimary fs-3"></i>
+                                    <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div v-if="selectedManuscriptAttachments.length"
+                            class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
+                            <i class="ri-attachment-2 p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <div>
+                                <h2 class="text-dark fw-bolder fs-3 mb-2">Lampiran</h2>
+                                <span class="text-gray-600 fs-5 fw-semibold">Berkas pendukung yang perlu disiapkan.</span>
+                            </div>
+                        </div>
+                        <div v-if="selectedManuscriptAttachments.length" class="ps-17 ps-md-19">
+                            <ul class="service-modal-list">
+                                <li v-for="item in selectedManuscriptAttachments" :key="item"
+                                    class="d-flex align-items-start gap-2">
+                                    <i style="margin-top: 2px;"
+                                        class="ri-file-text-fill text-myprimary fs-3"></i>
+                                    <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div v-if="selectedManuscriptSubmissionMethods.length"
+                            class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
+                            <i class="ri-telegram-2-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <div>
+                                <h2 class="text-dark fw-bolder fs-3 mb-2">Metode Pengiriman</h2>
+                                <span class="text-gray-600 fs-5 fw-semibold">Pastikan pengiriman naskah sesuai.</span>
+                            </div>
+                        </div>
+                        <div v-if="selectedManuscriptSubmissionMethods.length" class="ps-17 ps-md-19">
+                            <ul class="service-modal-list">
+                                <li v-for="item in selectedManuscriptSubmissionMethods" :key="item"
+                                    class="d-flex align-items-start gap-2">
+                                    <i style="margin-top: 2px;"
+                                        class="ri-arrow-right-circle-fill text-myprimary fs-3"></i>
+                                    <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div v-if="selectedManuscriptDocuments.length"
+                            class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
+                            <i class="ri-file-download-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <div>
+                                <h2 class="text-dark fw-bolder fs-3 mb-2">File Terlampir</h2>
+                                <span class="text-gray-600 fs-5 fw-semibold">Unduh contoh dokumen yang tersedia.</span>
+                            </div>
+                        </div>
+                        <div v-if="selectedManuscriptDocuments.length" class="ps-18 ps-md-20">
+                            <div class="d-flex flex-column gap-4">
+                                <a v-for="document in selectedManuscriptDocuments"
+                                    :key="document.path || document.url || document.name"
+                                    :href="document.url"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="d-flex align-items-center justify-content-between gap-4 border border-gray-300 rounded-3 p-5">
+                                    <span class="d-flex align-items-center gap-3 flex-fill">
+                                        <i class="ri-file-text-fill text-myprimary fs-1"></i>
+                                        <span class="min-w-0">
+                                            <span class="d-block text-dark fw-bolder fs-6 text-truncate-1 text-truncate mw-200px mw-md-300px">
+                                                {{ document.name }}
+                                            </span>
+                                            <span class="d-block text-gray-600 fs-7 fw-semibold mt-1">
+                                                {{ document.extension?.toUpperCase() || 'FILE' }} • {{ formatFileSize(document.size) }}
+                                            </span>
+                                        </span>
+                                    </span>
+                                    <i class="ri-download-2-line text-myprimary fs-1 flex-shrink-0"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <a v-if="setting?.email" :href="`mailto:${setting.email}`" target="_blank"
+                            class="w-100 mt-8 btn btn-hover-icon justify-content-center btn-myprimary-filled align-items-center gap-2 rounded-3 fs-5">
+                            <span class="fw-bolder me-1">Kirim Naskah</span>
+                            <i class="ri-arrow-right-up-line fw-bold fs-2"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -744,12 +861,18 @@ export default {
         const blogSliderLoop = computed(() => safeBlogs.value.length > 3);
         const selectedBook = ref(null);
         const selectedService = ref(null);
+        const selectedManuscriptCategory = ref(null);
         let originalBodyOverflow = '';
         let serviceModalInstance = null;
         let serviceModalElement = null;
+        let manuscriptCategoryModalInstance = null;
+        let manuscriptCategoryModalElement = null;
         const isAnyModalOpen = computed(() => Boolean(selectedBook.value));
         const handleServiceModalHidden = () => {
             selectedService.value = null;
+        };
+        const handleManuscriptCategoryModalHidden = () => {
+            selectedManuscriptCategory.value = null;
         };
 
         const selectedBookImages = computed(() => {
@@ -852,6 +975,34 @@ export default {
                 .map(normalizeServiceSection);
         });
 
+        const selectedManuscriptRequirements = computed(() => {
+            return normalizeListItems(selectedManuscriptCategory.value?.requirements || []);
+        });
+
+        const selectedManuscriptAttachments = computed(() => {
+            return normalizeListItems(selectedManuscriptCategory.value?.attachments || []);
+        });
+
+        const selectedManuscriptSubmissionMethods = computed(() => {
+            return normalizeListItems(selectedManuscriptCategory.value?.submission_method || []);
+        });
+
+        const selectedManuscriptDocuments = computed(() => {
+            const documents = selectedManuscriptCategory.value?.attached_documents || [];
+
+            if (!Array.isArray(documents)) {
+                return [];
+            }
+
+            return documents
+                .filter((document) => document?.url)
+                .map((document) => ({
+                    ...document,
+                    name: document.name || document.path?.split('/').pop() || 'Dokumen terlampir',
+                    extension: document.extension || document.path?.split('.').pop() || '',
+                }));
+        });
+
         const serviceSectionTypeLabel = (type) => {
             const labels = {
                 text: 'Teks Paragraf',
@@ -879,6 +1030,19 @@ export default {
             serviceModalInstance.show();
         };
 
+        const openManuscriptCategoryModal = async (category) => {
+            selectedManuscriptCategory.value = category;
+
+            await nextTick();
+
+            if (!manuscriptCategoryModalElement || !window.bootstrap?.Modal) {
+                return;
+            }
+
+            manuscriptCategoryModalInstance = window.bootstrap.Modal.getOrCreateInstance(manuscriptCategoryModalElement);
+            manuscriptCategoryModalInstance.show();
+        };
+
         const goToBook = (book) => {
             if (book?.slug) {
                 router.visit(`/books/${book.slug}`);
@@ -902,6 +1066,15 @@ export default {
             }
 
             selectedService.value = null;
+        };
+
+        const closeManuscriptCategoryModal = () => {
+            if (manuscriptCategoryModalInstance) {
+                manuscriptCategoryModalInstance.hide();
+                return;
+            }
+
+            selectedManuscriptCategory.value = null;
         };
 
         const handleModalKeydown = (event) => {
@@ -954,7 +1127,9 @@ export default {
 
             if (typeof document !== 'undefined') {
                 serviceModalElement = document.getElementById('serviceDetailModal');
+                manuscriptCategoryModalElement = document.getElementById('manuscriptCategoryModal');
                 serviceModalElement?.addEventListener('hidden.bs.modal', handleServiceModalHidden);
+                manuscriptCategoryModalElement?.addEventListener('hidden.bs.modal', handleManuscriptCategoryModalHidden);
             }
         });
 
@@ -968,9 +1143,11 @@ export default {
             if (typeof document !== 'undefined') {
                 document.body.style.overflow = originalBodyOverflow;
                 serviceModalElement?.removeEventListener('hidden.bs.modal', handleServiceModalHidden);
+                manuscriptCategoryModalElement?.removeEventListener('hidden.bs.modal', handleManuscriptCategoryModalHidden);
             }
 
             serviceModalInstance?.dispose();
+            manuscriptCategoryModalInstance?.dispose();
         });
 
         const overviewStats = computed(() => [
@@ -1035,6 +1212,34 @@ export default {
             return whatsappNumber.value ? `https://wa.me/${whatsappNumber.value}` : '#contact';
         });
 
+        const consultationWhatsAppLink = computed(() => {
+            if (!whatsappNumber.value) {
+                return '#contact';
+            }
+
+            const message = encodeURIComponent('Halo, saya ingin konsultasi ...');
+            return `https://wa.me/${whatsappNumber.value}?text=${message}`;
+        });
+
+        const bookWhatsAppLink = (book) => {
+            if (!whatsappNumber.value) {
+                return '#contact';
+            }
+
+            const title = book?.title || 'buku ini';
+            const message = encodeURIComponent(`Halo, saya ingin pesan buku "${title}".`);
+            return `https://wa.me/${whatsappNumber.value}?text=${message}`;
+        };
+
+        const serviceDiscussionWhatsAppLink = computed(() => {
+            if (!whatsappNumber.value) {
+                return '#contact';
+            }
+
+            const message = encodeURIComponent('Halo, saya ingin diskusi layanan.');
+            return `https://wa.me/${whatsappNumber.value}?text=${message}`;
+        });
+
         const serviceWhatsAppLink = computed(() => {
             if (!selectedService.value || !whatsappNumber.value) {
                 return whatsappLink.value;
@@ -1086,6 +1291,25 @@ export default {
                 month: 'short',
                 year: 'numeric',
             }).format(parsedDate);
+        };
+
+        const formatFileSize = (size) => {
+            if (!size) return '0 B';
+
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let value = Number(size);
+            let unitIndex = 0;
+
+            if (!Number.isFinite(value)) {
+                return '0 B';
+            }
+
+            while (value >= 1024 && unitIndex < units.length - 1) {
+                value /= 1024;
+                unitIndex++;
+            }
+
+            return `${value.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
         };
 
         const servicePrice = (service) => {
@@ -1189,22 +1413,31 @@ export default {
             blogSliderLoop,
             selectedBook,
             selectedService,
+            selectedManuscriptCategory,
             selectedBookImages,
             selectedBookDetails,
             selectedBookDescription,
             selectedServicePackages,
             selectedServiceSections,
             selectedServiceHighlights,
+            selectedManuscriptRequirements,
+            selectedManuscriptAttachments,
+            selectedManuscriptSubmissionMethods,
+            selectedManuscriptDocuments,
             processSteps,
             activeStep,
             overviewStats,
             formattedWhatsApp,
             whatsappLink,
+            consultationWhatsAppLink,
+            bookWhatsAppLink,
+            serviceDiscussionWhatsAppLink,
             serviceWhatsAppLink,
             advantageIcon,
             serviceIcon,
             formatPrice,
             formatDate,
+            formatFileSize,
             formatServicePackagePrice,
             servicePrice,
             serviceSectionTypeLabel,
@@ -1213,6 +1446,8 @@ export default {
             goToBlog,
             openServiceModal,
             closeServiceModal,
+            openManuscriptCategoryModal,
+            closeManuscriptCategoryModal,
             openBookModal,
             closeBookModal,
             ratingStars,
@@ -1489,6 +1724,21 @@ export default {
 }
 
 .book-modal-trigger:focus-visible {
+    outline: 2px solid var(--base-color-500);
+    outline-offset: 4px;
+}
+
+.manuscript-category-card {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.manuscript-category-card:hover {
+    border-color: rgba(249, 115, 22, 0.42) !important;
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+}
+
+.manuscript-category-card:focus-visible {
     outline: 2px solid var(--base-color-500);
     outline-offset: 4px;
 }
@@ -1782,21 +2032,10 @@ export default {
 .service-modal-list,
 .service-modal-steps {
     display: grid;
-    gap: 0.75rem;
+    gap: 0.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
-}
-
-.service-modal-list li,
-.service-modal-steps li {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-    color: var(--slate-600);
-    font-size: 1.075rem;
-    font-weight: 600;
-    line-height: 1.65;
 }
 
 .service-modal-step-number {
