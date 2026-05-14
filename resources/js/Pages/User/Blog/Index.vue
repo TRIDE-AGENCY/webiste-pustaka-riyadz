@@ -13,9 +13,26 @@
                     <h1 class="text-dark fs-3hx fw-bolder mb-8">
                         Blog dan Artikel
                     </h1>
-                    <p class="text-gray-600 fs-3 fs-md-2 fw-semibold mb-20 pb-md-10 mw-800px mw-xl-900px lh-lg">
+                    <p class="text-gray-600 fs-3 fs-md-2 fw-semibold mb-10 mw-800px mw-xl-900px lh-lg">
                         Temukan bacaan terbaru seputar penerbitan, literasi, dan lainnya.
                     </p>
+                    <div class="d-flex flex-column align-items-center w-100 mb-20 pb-md-10">
+                        <form class="blog-index-search" :class="{ 'blog-index-search-has-clear': search }"
+                            role="search" aria-label="Cari blog"
+                            @submit.prevent="handleSearch">
+                            <i class="ri-search-line fs-3 text-gray-500" aria-hidden="true"></i>
+                            <input v-model="search" type="search" class="form-control fs-5 fw-semibold"
+                                placeholder="Cari judul atau artikel..." aria-label="Kata kunci pencarian blog">
+                            <button v-if="search" type="button"
+                                class="btn btn-icon btn-sm btn-mytertiary-ghost rounded-pill flex-shrink-0"
+                                aria-label="Bersihkan pencarian" @click="clearSearch">
+                                <i class="ri-close-line fs-3"></i>
+                            </button>
+                            <button type="submit" class="btn btn-sm btn-myprimary-filled rounded-3 fw-bolder fs-5">
+                                Cari
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
@@ -29,12 +46,11 @@
                         role="button" tabindex="0" @click="goToBlog(blog)"
                         @keydown.enter.prevent="goToBlog(blog)"
                         @keydown.space.prevent="goToBlog(blog)">
-                        <div class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                        <div v-if="blog.image" class="ratio ratio-4x3 rounded-3 overflow-hidden">
                             <img
-                                :src="blog.image || fallbackImage"
+                                :src="imageUrl(blog.image)"
                                 :alt="blog.title"
                                 class="img-fluid object-fit-cover w-100 h-100"
-                                @error="setFallbackImage"
                             >
                         </div>
                         <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
@@ -52,20 +68,18 @@
                 />
             </div>
 
-            <div v-else class="blog-index-empty bg-white border border-gray-300 rounded-4 p-8 p-md-12 text-center">
+            <div v-else class="blog-index-empty bg-white border border-gray-300 rounded-4 p-10 p-md-14 text-center">
                 <img src="/assets/media/illustrations/empty.png" alt="Tidak ada blog"
-                    class="img-fluid mh-225px mb-8 mx-auto">
-                <h2 class="text-dark fw-bolder fs-1 mb-3">Blog Tidak Ditemukan</h2>
-                <p class="text-gray-600 fs-5 fw-semibold mb-6">
-                    Belum ada blog yang terbit atau kata kunci pencarian tidak cocok.
-                </p>
+                    class="img-fluid mh-225px mb-10 mx-auto">
+                <h2 class="text-dark mb-3 fw-bolder">Blog Tidak Ditemukan</h2>
+                <p class="text-gray-600 fs-4 mb-10">Belum ada blog atau pencarian tidak sesuai.</p>
                 <button
-                    v-if="filters.q"
+                    v-if="hasActiveSearch"
                     type="button"
                     class="btn btn-myprimary-filled rounded-3 fw-bolder fs-5"
                     @click="clearSearch"
                 >
-                    Tampilkan Semua Blog
+                    Tampilkan Semua
                 </button>
             </div>
         </section>
@@ -101,22 +115,38 @@ export default {
     },
 
     setup(props) {
-        const fallbackImage = '/assets/media/illustrations/img-hero.png';
         const search = ref(props.filters?.q || '');
 
         const safeBlogs = computed(() => props.blogs?.data || []);
         const pageTitle = computed(() => `Blog dan Artikel − ${props.setting?.site_title || 'Pustaka Riyadz'}`);
+        const hasActiveSearch = computed(() => Boolean(props.filters?.q));
+        const shouldShowResultSummary = computed(() => hasActiveSearch.value || safeBlogs.value.length > 0);
+        const emptyTitle = computed(() => hasActiveSearch.value ? 'Blog Tidak Ditemukan' : 'Belum Ada Blog');
+        const emptyDescription = computed(() => {
+            if (hasActiveSearch.value) {
+                return `Tidak ada blog yang cocok dengan kata kunci "${props.filters.q}". Coba kata kunci lain atau tampilkan semua blog.`;
+            }
+
+            return 'Blog belum tersedia saat ini.';
+        });
         const resultSummary = computed(() => {
             const from = props.blogs?.from || 0;
             const to = props.blogs?.to || 0;
             const total = props.blogs?.total || 0;
 
+            if (total === 0) {
+                return 'Tidak ada blog yang cocok dengan pencarian Anda';
+            }
+
             return `Menampilkan ${from}-${to} dari ${total} blog`;
         });
 
         const handleSearch = () => {
+            const keyword = search.value.trim();
+            search.value = keyword;
+
             router.get('/blogs', {
-                q: search.value || undefined,
+                q: keyword || undefined,
             }, {
                 preserveState: true,
                 replace: true,
@@ -135,6 +165,18 @@ export default {
             if (blog?.slug) {
                 router.visit(`/blogs/${blog.slug}`);
             }
+        };
+
+        const imageUrl = (path) => {
+            if (!path) {
+                return '';
+            }
+
+            if (/^https?:\/\//i.test(path) || path.startsWith('/')) {
+                return path;
+            }
+
+            return `/storage/${path.replace(/^storage\//, '')}`;
         };
 
         const formatViews = (views) => {
@@ -160,22 +202,21 @@ export default {
             }).format(parsedDate);
         };
 
-        const setFallbackImage = (event) => {
-            event.target.src = fallbackImage;
-        };
-
         return {
-            fallbackImage,
             search,
             safeBlogs,
             pageTitle,
+            hasActiveSearch,
+            shouldShowResultSummary,
+            emptyTitle,
+            emptyDescription,
             resultSummary,
             handleSearch,
             clearSearch,
             goToBlog,
+            imageUrl,
             formatViews,
             formatDate,
-            setFallbackImage,
         };
     },
 };
@@ -235,15 +276,19 @@ export default {
 }
 
 .blog-index-search {
-    width: min(100%, 500px);
+    width: min(100%, 550px);
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.45rem;
     border: 1px solid var(--bs-gray-300);
     border-radius: 0.85rem;
     background: #f8fafc;
     padding: 0.45rem;
+}
+
+.blog-index-search-has-clear {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
 }
 
 .blog-index-search > i {
@@ -255,6 +300,16 @@ export default {
     border: 0;
     background: transparent;
     padding-left: 0.35rem;
+}
+
+.blog-index-search .form-control[type="search"]::-webkit-search-cancel-button,
+.blog-index-search .form-control[type="search"]::-webkit-search-decoration {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.blog-index-search .form-control[type="search"]::-ms-clear {
+    display: none;
 }
 
 .blog-index-grid {

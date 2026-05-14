@@ -148,9 +148,9 @@
                 <slot />
             </div>
 
-            <footer class="w-100 flex-shrink-0 text-center py-6 text-gray-500 fs-6 fw-semibold bg-white border-top border-gray-300"
+            <footer class="w-100 flex-shrink-0 text-center py-6 text-white fs-6 fw-semibold bg-myprimary"
                 :style="{ marginTop: footerMarginTop }">
-                © {{ new Date().getFullYear() }} <span class="fw-bolder text-gray-700">{{ setting.site_title }}</span> • All Rights Reserved
+                © {{ new Date().getFullYear() }} <span class="fw-bolder text-white">{{ setting.site_title }}</span> • All Rights Reserved
             </footer>
 
         </div>

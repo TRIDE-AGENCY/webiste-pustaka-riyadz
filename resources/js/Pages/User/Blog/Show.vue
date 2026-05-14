@@ -7,13 +7,13 @@
         <meta property="og:url" :content="current_url" />
         <meta property="og:title" :content="blog.title" />
         <meta property="og:description" :content="description" />
-        <meta property="og:image" :content="`${app_url}/storage/${blog.image}`" />
+        <meta v-if="blogImageUrl" property="og:image" :content="blogImageUrl" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" :content="current_url" />
         <meta property="twitter:title" :content="blog.title" />
         <meta property="twitter:description" :content="description" />
-        <meta property="twitter:image" :content="`${app_url}/storage/${blog.image}`" />
+        <meta v-if="blogImageUrl" property="twitter:image" :content="blogImageUrl" />
     </Head>
 
     <LayoutUser :setting="setting" navbar-default-bg="bg-light">
@@ -25,10 +25,9 @@
                 Kembali
             </button>
 
-            <article class="mb-8 mb-md-10 bg-white border border-gray-300 rounded-4 overflow-hidden">
+            <article v-if="blogImageUrl" class="mb-8 mb-md-10 bg-white border border-gray-300 rounded-4 overflow-hidden">
                 <div class="blog-detail-cover">
-                    <img :src="blog.image || fallbackImage" :alt="blog.title" class="blog-detail-cover-image"
-                        @error="setFallbackImage">
+                    <img :src="imageUrl(blog.image)" :alt="blog.title" class="blog-detail-cover-image">
                 </div>
             </article>
 
@@ -52,14 +51,18 @@
                             <h2 class="text-dark fw-bolder fs-1 mb-0">Info Blog</h2>
                         </div>
                         <div class="d-flex flex-column gap-4">
+                            <div v-if="blogAuthorName">
+                                <span class="d-block text-gray-600 fs-6 fw-semibold mb-2">Penulis</span>
+                                <strong class="text-dark fs-4 fw-bolder">{{ blogAuthorName }}</strong>
+                            </div>
                             <div>
                                 <span class="d-block text-gray-600 fs-6 fw-semibold mb-2">Diterbitkan</span>
                                 <strong class="text-dark fs-4 fw-bolder">{{ formatDate(blog.created_at) }}</strong>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <span class="d-block text-gray-600 fs-6 fw-semibold mb-2">Terakhir Diperbarui</span>
                                 <strong class="text-dark fs-4 fw-bolder">{{ formatDate(blog.updated_at) }}</strong>
-                            </div>
+                            </div> -->
                             <div>
                                 <span class="d-block text-gray-600 fs-6 fw-semibold mb-2">Dilihat</span>
                                 <strong class="text-dark fs-4 fw-bolder">{{ formatViews(blog.views) }}</strong>
@@ -105,31 +108,15 @@
                         </div>
                     </section>
 
-                    <!-- <section v-if="safeRelatedBlogs.length" class="bg-white border border-gray-300 rounded-4 p-6 p-md-7 mt-6">
-                        <div class="d-flex align-items-center gap-3 mb-5">
-                            <span class="blog-detail-sidebar-icon">
-                                <i class="ri-newspaper-fill fs-2"></i>
-                            </span>
-                            <h2 class="text-dark fw-bolder fs-2 mb-0">Artikel Lainnya</h2>
-                        </div>
-
-                        <div class="d-flex flex-column gap-4">
-                            <Link v-for="relatedBlog in safeRelatedBlogs" :key="relatedBlog.id"
-                                :href="`/blogs/${relatedBlog.slug}`"
-                                class="blog-detail-related d-flex gap-4 text-decoration-none rounded-3">
-                                <img :src="relatedBlog.image || fallbackImage" :alt="relatedBlog.title"
-                                    class="blog-detail-related-image" @error="setFallbackImage">
-                                <span class="min-w-0">
-                                    <span class="d-block text-dark fs-5 fw-bolder lh-sm blog-detail-related-title">
-                                        {{ relatedBlog.title }}
-                                    </span>
-                                    <span class="d-block text-gray-600 fs-7 fw-semibold mt-2">
-                                        {{ formatDate(relatedBlog.created_at) }}
-                                    </span>
-                                </span>
-                            </Link>
-                        </div>
-                    </section> -->
+                    <section v-if="blog_ad?.image" class="bg-white border border-gray-300 rounded-4 mt-6 overflow-hidden">
+                        <a v-if="blog_ad.link" :href="blog_ad.link" target="_blank"
+                            class="blog-detail-ad-link d-block" :aria-label="blog_ad.description || 'Iklan Blog'">
+                            <img :src="imageUrl(blog_ad.image)" :alt="blog_ad.description || 'Iklan Blog'"
+                                class="blog-detail-ad-image">
+                        </a>
+                        <img v-else :src="imageUrl(blog_ad.image)" :alt="blog_ad.description || 'Iklan Blog'"
+                            class="blog-detail-ad-image">
+                    </section>
 
                     <!-- <Link href="/blogs"
                         class="btn btn-myprimary-filled btn-hover-icon rounded-3 fw-bolder fs-5 d-flex align-items-center justify-content-center gap-1 mt-6">
@@ -138,6 +125,41 @@
                     </Link> -->
                 </aside>
             </div>
+
+            <section v-if="shouldShowRelatedBlogs" class="mt-14 mt-md-16">
+                <div class="d-flex flex-column flex-md-row gap-5 align-items-md-end justify-content-md-between mb-8">
+                    <div>
+                        <h2 class="text-dark fw-bolder fs-2x mb-3">Blog Lainnya</h2>
+                        <p class="text-gray-600 fs-5 fw-semibold mb-0">
+                            Lanjutkan membaca blog lain yang masih relevan.
+                        </p>
+                    </div>
+                    <Link href="/blogs"
+                        class="btn btn-sm btn-hover-icon btn-myprimary-tinted rounded-3 fw-bolder fs-5 d-inline-flex align-items-center justify-content-center gap-1">
+                        Semua Blog
+                        <i class="ri-arrow-right-up-line fs-3 me-n2"></i>
+                    </Link>
+                </div>
+
+                <div class="blog-detail-related-grid">
+                    <Link v-for="relatedBlog in relatedBlogItems" :key="relatedBlog.id"
+                        :href="`/blogs/${relatedBlog.slug}`"
+                        class="blog-detail-related-card d-flex flex-column bg-white rounded-4 p-2 border border-gray-300 h-100 text-decoration-none">
+                        <div v-if="relatedBlog.image" class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                            <img :src="imageUrl(relatedBlog.image)" :alt="relatedBlog.title"
+                                class="blog-detail-related-card-image">
+                        </div>
+                        <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
+                            <h3 class="text-dark fw-bolder text-truncate-2 fs-2 mb-3">
+                                {{ relatedBlog.title }}
+                            </h3>
+                            <p class="text-gray-600 fs-5 fw-semibold mb-0">
+                                {{ formatDate(relatedBlog.created_at) }}
+                            </p>
+                        </div>
+                    </Link>
+                </div>
+            </section>
         </section>
     </LayoutUser>
 </template>
@@ -163,6 +185,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        blog_ad: {
+            type: Object,
+            default: null,
+        },
         setting: {
             type: Object,
             default: () => ({}),
@@ -182,10 +208,41 @@ export default {
     },
 
     setup(props) {
-        const fallbackImage = '/assets/media/illustrations/img-hero.png';
         const copyLabel = ref('Salin Link');
         const safeRelatedBlogs = computed(() => props.related_blogs || []);
+        const shouldShowRelatedBlogs = computed(() => safeRelatedBlogs.value.length >= 3);
+        const relatedBlogItems = computed(() => safeRelatedBlogs.value.slice(0, 3));
         const pageTitle = computed(() => `${props.blog.title} - ${props.setting?.site_title || 'Pustaka Riyadz'}`);
+        const blogAuthorName = computed(() => props.blog.author?.name || props.blog.author || '');
+        const imageUrl = (path) => {
+            if (!path) {
+                return '';
+            }
+
+            if (/^https?:\/\//i.test(path)) {
+                return path;
+            }
+
+            if (path.startsWith('/')) {
+                return path;
+            }
+
+            return `/storage/${path.replace(/^storage\//, '')}`;
+        };
+        const absoluteImageUrl = (path) => {
+            const url = imageUrl(path);
+
+            if (!url) {
+                return '';
+            }
+
+            if (/^https?:\/\//i.test(url)) {
+                return url;
+            }
+
+            return `${props.app_url}${url}`;
+        };
+        const blogImageUrl = computed(() => absoluteImageUrl(props.blog.image));
         const shareUrl = computed(() => {
             if (props.current_url) {
                 return props.current_url;
@@ -283,25 +340,24 @@ export default {
             copyShareLink();
         };
 
-        const setFallbackImage = (event) => {
-            event.target.src = fallbackImage;
-        };
-
         return {
-            fallbackImage,
             copyLabel,
             safeRelatedBlogs,
+            shouldShowRelatedBlogs,
+            relatedBlogItems,
             pageTitle,
+            blogAuthorName,
+            blogImageUrl,
             shareUrl,
             whatsappShareUrl,
             facebookShareUrl,
             twitterShareUrl,
+            imageUrl,
             formatDate,
             formatViews,
             goBack,
             copyShareLink,
             shareArticle,
-            setFallbackImage,
         };
     },
 };
@@ -416,6 +472,17 @@ export default {
     gap: 1rem;
 }
 
+.blog-detail-ad-image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.blog-detail-ad-link:hover .blog-detail-ad-image {
+    transform: scale(1.02);
+}
+
 .blog-share-button {
     display: inline-flex;
     align-items: center;
@@ -435,22 +502,21 @@ export default {
     transform: translateY(-1px);
 }
 
-.blog-detail-related {
+.blog-detail-related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+}
+
+.blog-detail-related-card {
     min-width: 0;
-    padding: 0.35rem;
-    transition: background 0.2s ease, transform 0.2s ease;
+    color: inherit;
 }
 
-.blog-detail-related:hover {
-    background: #f8fafc;
-    transform: translateY(-1px);
-}
-
-.blog-detail-related-image {
-    width: 76px;
-    height: 76px;
-    flex: 0 0 auto;
-    border-radius: 0.65rem;
+.blog-detail-related-card-image {
+    width: 100%;
+    height: 100%;
+    display: block;
     object-fit: cover;
 }
 
@@ -461,6 +527,10 @@ export default {
 
     .blog-detail-cover {
         aspect-ratio: 4 / 3;
+    }
+
+    .blog-detail-related-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -476,6 +546,10 @@ export default {
     .blog-detail-chip {
         width: 100%;
         justify-content: center;
+    }
+
+    .blog-detail-related-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>

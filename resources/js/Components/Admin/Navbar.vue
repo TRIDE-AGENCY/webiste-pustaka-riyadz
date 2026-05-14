@@ -53,7 +53,7 @@
                                     <i class="ri-home-4-line fs-3 me-2 fw-semibold"></i> Beranda
                                 </Link>
                             </li>
-                            <li>
+                            <li v-if="isRootAdmin">
                                 <Link href="/admin/settings" 
                                     class="dropdown-item fs-5 px-4 py-3 btn btn-sm btn-mytertiary-ghost d-flex align-items-center fw-bold rounded-3">
                                     <i class="ri-settings-line fs-3 me-2 fw-semibold"></i>Pengaturan
@@ -87,6 +87,12 @@
     export default {
         components: {
             Link,
+        },
+
+        computed: {
+            isRootAdmin() {
+                return Number(this.$page.props.auth?.user?.id) === 1;
+            },
         },
 
         methods: {

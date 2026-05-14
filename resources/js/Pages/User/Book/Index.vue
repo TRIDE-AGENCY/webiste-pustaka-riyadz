@@ -13,9 +13,26 @@
                     <h1 class="text-dark fs-3hx fw-bolder mb-8">
                         Daftar Buku Kami
                     </h1>
-                    <p class="text-gray-600 fs-3 fs-md-2 fw-semibold mb-20 pb-md-10 mw-800px mw-xl-900px lh-lg">
+                    <p class="text-gray-600 fs-3 fs-md-2 fw-semibold mb-10 mw-800px mw-xl-900px lh-lg">
                         Jelajahi katalog buku yang tersedia dan pilih judul yang ingin Anda pesan.
                     </p>
+                    <div class="d-flex flex-column align-items-center w-100 mb-20 pb-md-10">
+                        <form class="book-index-search" :class="{ 'book-index-search-has-clear': search }"
+                            role="search" aria-label="Cari buku"
+                            @submit.prevent="handleSearch">
+                            <i class="ri-search-line fs-3 text-gray-500" aria-hidden="true"></i>
+                            <input v-model="search" type="search" class="form-control fs-5 fw-semibold"
+                                placeholder="Cari judul, penulis, ISBN..." aria-label="Kata kunci pencarian buku">
+                            <button v-if="search" type="button"
+                                class="btn btn-icon btn-sm btn-mytertiary-ghost rounded-pill flex-shrink-0"
+                                aria-label="Bersihkan pencarian" @click="clearSearch">
+                                <i class="ri-close-line fs-3"></i>
+                            </button>
+                            <button type="submit" class="btn btn-sm btn-myprimary-filled rounded-3 fw-bolder fs-5">
+                                Cari
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
@@ -26,8 +43,8 @@
                         class="book-index-card d-flex flex-column bg-white rounded-4 p-2 border border-gray-300 h-100 cursor-pointer"
                         role="button" tabindex="0" @click="goToBook(book)" @keydown.enter.prevent="goToBook(book)"
                         @keydown.space.prevent="goToBook(book)">
-                        <img :src="book.image || fallbackImage" :alt="book.title" class="book-index-image img-fluid rounded-3"
-                            @error="setFallbackImage">
+                        <img v-if="book.image" :src="book.image" :alt="book.title"
+                            class="book-index-image img-fluid rounded-3">
                         <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
                             <h3 class="text-dark fw-bolder fs-2 mb-2">
                                 {{ book.title }}
@@ -56,16 +73,14 @@
                     class="book-index-pagination" />
             </div>
 
-            <div v-else class="book-index-empty bg-white border border-gray-300 rounded-4 p-8 p-md-12 text-center">
+            <div v-else class="book-index-empty bg-white border border-gray-300 rounded-4 p-10 p-md-14 text-center">
                 <img src="/assets/media/illustrations/empty.png" alt="Tidak ada buku"
-                    class="img-fluid mh-225px mb-8 mx-auto">
-                <h2 class="text-dark fw-bolder fs-1 mb-3">Buku Tidak Ditemukan</h2>
-                <p class="text-gray-600 fs-5 fw-semibold mb-6">
-                    Belum ada buku atau kata kunci pencarian tidak cocok.
-                </p>
-                <button v-if="filters.q" type="button" class="btn btn-myprimary-filled rounded-3 fw-bolder fs-5"
+                    class="img-fluid mh-225px mb-10 mx-auto">
+                <h2 class="text-dark mb-3 fw-bolder">Buku Tidak Ditemukan</h2>
+                <p class="text-gray-600 fs-4 mb-10">Belum ada buku atau pencarian tidak sesuai.</p>
+                <button v-if="hasActiveSearch" type="button" class="btn btn-myprimary-filled rounded-3 fw-bolder fs-5"
                     @click="clearSearch">
-                    Tampilkan Semua Buku
+                    Tampilkan Semua
                 </button>
             </div>
         </section>
@@ -73,7 +88,7 @@
 </template>
 
 <script>
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import LayoutUser from '../../../Layouts/User.vue';
 import Pagination from '../../../Components/Pagination.vue';
@@ -81,7 +96,6 @@ import Pagination from '../../../Components/Pagination.vue';
 export default {
     components: {
         Head,
-        Link,
         LayoutUser,
         Pagination,
     },
@@ -102,11 +116,20 @@ export default {
     },
 
     setup(props) {
-        const fallbackImage = '/assets/media/illustrations/img-book.png';
         const search = ref(props.filters?.q || '');
 
         const safeBooks = computed(() => props.books?.data || []);
         const pageTitle = computed(() => `Daftar Buku − ${props.setting?.site_title || 'Pustaka Riyadz'}`);
+        const hasActiveSearch = computed(() => Boolean(props.filters?.q));
+        const shouldShowResultSummary = computed(() => hasActiveSearch.value || safeBooks.value.length > 0);
+        const emptyTitle = computed(() => hasActiveSearch.value ? 'Buku Tidak Ditemukan' : 'Belum Ada Buku');
+        const emptyDescription = computed(() => {
+            if (hasActiveSearch.value) {
+                return `Tidak ada buku yang cocok dengan kata kunci "${props.filters.q}". Coba kata kunci lain atau tampilkan semua buku.`;
+            }
+
+            return 'Katalog buku belum tersedia saat ini.';
+        });
         const whatsappNumber = computed(() => {
             const raw = props.setting?.whatsapp;
 
@@ -143,12 +166,19 @@ export default {
             const to = props.books?.to || 0;
             const total = props.books?.total || 0;
 
+            if (total === 0) {
+                return 'Tidak ada buku yang cocok dengan pencarian Anda';
+            }
+
             return `Menampilkan ${from}-${to} dari ${total} buku`;
         });
 
         const handleSearch = () => {
+            const keyword = search.value.trim();
+            search.value = keyword;
+
             router.get('/books', {
-                q: search.value || undefined,
+                q: keyword || undefined,
             }, {
                 preserveState: true,
                 replace: true,
@@ -182,15 +212,14 @@ export default {
             }).format(Number(price));
         };
 
-        const setFallbackImage = (event) => {
-            event.target.src = fallbackImage;
-        };
-
         return {
-            fallbackImage,
             search,
             safeBooks,
             pageTitle,
+            hasActiveSearch,
+            shouldShowResultSummary,
+            emptyTitle,
+            emptyDescription,
             whatsappLink,
             bookWhatsAppLink,
             resultSummary,
@@ -198,7 +227,6 @@ export default {
             clearSearch,
             goToBook,
             formatPrice,
-            setFallbackImage,
         };
     },
 };
@@ -268,15 +296,19 @@ export default {
 }
 
 .book-index-search {
-    width: min(100%, 440px);
+    width: min(100%, 550px);
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.45rem;
     border: 1px solid var(--bs-gray-300);
     border-radius: 0.85rem;
     background: #f8fafc;
     padding: 0.45rem;
+}
+
+.book-index-search-has-clear {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
 }
 
 .book-index-search > i {
@@ -288,6 +320,16 @@ export default {
     border: 0;
     background: transparent;
     padding-left: 0.35rem;
+}
+
+.book-index-search .form-control[type="search"]::-webkit-search-cancel-button,
+.book-index-search .form-control[type="search"]::-webkit-search-decoration {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.book-index-search .form-control[type="search"]::-ms-clear {
+    display: none;
 }
 
 .book-index-grid {

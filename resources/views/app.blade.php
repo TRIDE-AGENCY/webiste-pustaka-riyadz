@@ -13,17 +13,29 @@
     <meta name="keywords" content="{{ $setting->meta_keywords }}">
     <meta name="author" content="Tride Agency">
 
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $meta_type ?? 'website' }}">
     <meta property="og:title" content="{{ $meta_title ?? $setting->og_title }}">
     <meta property="og:description" content="{{ $meta_description ?? $setting->og_description }}">
     <meta property="og:image" content="{{ $meta_image ?? ($setting->og_image ? asset('storage/' . $setting->og_image) : asset('assets/media/logos/logo-og.jpg')) }}">
+    <meta property="og:image:secure_url" content="{{ $meta_image ?? ($setting->og_image ? asset('storage/' . $setting->og_image) : asset('assets/media/logos/logo-og.jpg')) }}">
+    @isset($meta_image_width)
+        <meta property="og:image:width" content="{{ $meta_image_width }}">
+    @endisset
+    @isset($meta_image_height)
+        <meta property="og:image:height" content="{{ $meta_image_height }}">
+    @endisset
+    @isset($meta_image_type)
+        <meta property="og:image:type" content="{{ $meta_image_type }}">
+    @endisset
+    <meta property="og:image:alt" content="{{ $meta_image_alt ?? ($meta_title ?? $setting->og_title) }}">
     <meta property="og:url" content="{{ $meta_url ?? $setting->site_url }}">
     <meta property="og:locale" content="id_ID">
 
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="{{ $twitter_card ?? 'summary' }}">
     <meta name="twitter:title" content="{{ $meta_title ?? $setting->og_title }}">
     <meta name="twitter:description" content="{{ $meta_description ?? $setting->og_description }}">
     <meta name="twitter:image" content="{{ $meta_image ?? ($setting->og_image ? asset('storage/' . $setting->og_image) : asset('assets/media/logos/logo-og.jpg')) }}">
+    <meta name="twitter:image:alt" content="{{ $meta_image_alt ?? ($meta_title ?? $setting->og_title) }}">
     <meta name="twitter:url" content="{{ $meta_url ?? $setting->site_url }}">
 
     <link rel="icon" href="{{ $setting->site_favicon ? asset('storage/' . $setting->site_favicon) : asset('assets/media/logos/logo-favicon.png') }}" type="image/png" />

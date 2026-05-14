@@ -30,6 +30,13 @@ Route::prefix('/admin')->name('admin.')->group(function () {
             Route::delete('/blogs/{blog}', 'destroy')->name('destroy');
         });
 
+        Route::controller(Admin\BlogAdController::class)->name('blog_ads.')->group(function () {
+            Route::get('/blog-ads', 'index')->name('index');
+            Route::post('/blog-ads', 'store')->name('store');
+            Route::put('/blog-ads/{blogAd}', 'update')->name('update');
+            Route::delete('/blog-ads/{blogAd}', 'destroy')->name('destroy');
+        });
+
         Route::controller(Admin\BookController::class)->name('books.')->group(function () {
             Route::get('/books', 'index')->name('index');
             Route::get('/books/create', 'create')->name('create');
@@ -86,14 +93,14 @@ Route::prefix('/admin')->name('admin.')->group(function () {
             Route::delete('/services/{service}', 'destroy')->name('destroy');
         });
         
-        Route::controller(Admin\UserController::class)->name('users.')->group(function () {
+        Route::middleware('root.admin')->controller(Admin\UserController::class)->name('users.')->group(function () {
             Route::get('/users', 'index')->name('index');
             Route::post('/users', 'store')->name('store');
             Route::put('/users/{user}', 'update')->name('update');
             Route::delete('/users/{user}', 'destroy')->name('destroy');
         });
 
-        Route::controller(Admin\SettingController::class)->name('settings.')->group(function () {
+        Route::middleware('root.admin')->controller(Admin\SettingController::class)->name('settings.')->group(function () {
             Route::get('/settings', 'index')->name('index');
             Route::put('/settings', 'update')->name('update');
         });

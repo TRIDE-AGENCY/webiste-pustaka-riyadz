@@ -14,7 +14,7 @@
             </button>
 
             <div class="book-detail-hero row g-8 g-xl-10">
-                <div class="col-12 col-md-5 book-detail-gallery-column">
+                <div v-if="safeImages.length" class="col-12 col-md-5 book-detail-gallery-column">
                     <div class="book-detail-gallery">
                         <div class="book-detail-slider-wrap">
                             <Swiper class="book-image-swiper" :modules="imageSliderModules" :slides-per-view="1"
@@ -23,8 +23,7 @@
                                 @swiper="setImageSwiper" @slideChange="handleImageSlideChange">
                                 <SwiperSlide v-for="(image, index) in safeImages" :key="`${image}-${index}`">
                                     <div class="book-detail-frame overflow-hidden">
-                                        <img :src="image" :alt="`${book.title} ${index + 1}`" class="book-detail-image"
-                                            @error="setFallbackImage">
+                                        <img :src="image" :alt="`${book.title} ${index + 1}`" class="book-detail-image">
                                     </div>
                                 </SwiperSlide>
                             </Swiper>
@@ -45,14 +44,13 @@
                             <button v-for="(image, index) in safeImages" :key="`${image}-${index}`" type="button"
                                 class="book-detail-thumb" :class="{ active: activeImageIndex === index }"
                                 :aria-label="`Tampilkan gambar ${index + 1}`" @click="setActiveImage(index)">
-                                <img :src="image" :alt="`${book.title} thumbnail ${index + 1}`"
-                                    @error="setFallbackImage">
+                                <img :src="image" :alt="`${book.title} thumbnail ${index + 1}`">
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-7">
+                <div :class="safeImages.length ? 'col-12 col-md-7' : 'col-12'">
                     <div class="bg-white border border-gray-300 rounded-4 p-7 p-md-9">
                         <h1 class="text-dark fw-bolder lh-sm fs-2x fs-md-2tx mb-7">
                             {{ book.title }}
@@ -150,7 +148,6 @@ export default {
     setup(props) {
         const activeImageIndex = ref(0);
         const imageSwiper = ref(null);
-        const fallbackImage = '/assets/media/illustrations/img-book.png';
         const imageSliderModules = [A11y, Pagination];
 
         const pageTitle = computed(() => {
@@ -162,9 +159,7 @@ export default {
                 ? props.book.images
                 : [props.book.image];
 
-            const validImages = images.filter(Boolean);
-
-            return validImages.length ? validImages : [fallbackImage];
+            return images.filter(Boolean);
         });
 
         const metaItems = computed(() => [
@@ -246,10 +241,6 @@ export default {
             }).format(Number(price));
         };
 
-        const setFallbackImage = (event) => {
-            event.target.src = fallbackImage;
-        };
-
         return {
             activeImageIndex,
             imageSliderModules,
@@ -264,7 +255,6 @@ export default {
             handleImageSlideChange,
             goBack,
             formatPrice,
-            setFallbackImage,
         };
     },
 };

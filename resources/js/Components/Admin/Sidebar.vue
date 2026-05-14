@@ -110,6 +110,19 @@
                     </div>
                     <div class="menu-item">
                         <Link class="menu-link menu-link-mysecondary rounded-3 py-3"
+                            :class="{ 'active': $page.url.startsWith('/admin/blog-ads') }" href="/admin/blog-ads">
+                        <span class="menu-icon">
+                            <i
+                                :class="[$page.url.startsWith('/admin/blog-ads') ? 'ri-advertisement-fill' :
+                                    'ri-advertisement-line', 'fs-2 fw-normal'
+                                ]"></i>
+                        </span>
+                        <span
+                            :class="[$page.url.startsWith('/admin/blog-ads') ? 'fw-bolder' : 'fw-bold', 'menu-title fs-5']">Iklan Blog</span>
+                        </Link>
+                    </div>
+                    <div class="menu-item">
+                        <Link class="menu-link menu-link-mysecondary rounded-3 py-3"
                             :class="{ 'active': $page.url.startsWith('/admin/faqs') }" href="/admin/faqs">
                         <span class="menu-icon">
                             <i
@@ -170,7 +183,7 @@
                             <span class="text-gray-500 fw-semibold text-uppercase fs-7" style="letter-spacing: 0.06em;">Lainnya</span>
                         </div>
                     </div>
-                    <div class="menu-item">
+                    <div v-if="isRootAdmin" class="menu-item">
                         <Link class="menu-link menu-link-mysecondary rounded-3 py-3"
                             :class="{ 'active': $page.url.startsWith('/admin/users') }" href="/admin/users">
                         <span class="menu-icon">
@@ -182,7 +195,7 @@
                             :class="[$page.url.startsWith('/admin/users') ? 'fw-bolder' : 'fw-bold', 'menu-title fs-5']">Pengguna</span>
                         </Link>
                     </div>
-                    <div class="menu-item">
+                    <div v-if="isRootAdmin" class="menu-item">
                         <Link class="menu-link menu-link-mysecondary rounded-3 py-3"
                             :class="{ 'active': $page.url.startsWith('/admin/settings') }" href="/admin/settings">
                         <span class="menu-icon">
@@ -224,8 +237,11 @@
             Link,
         },
 
-        setup() {
-        }
+        computed: {
+            isRootAdmin() {
+                return Number(this.$page.props.auth?.user?.id) === 1;
+            },
+        },
     }
 </script>
 

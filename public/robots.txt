@@ -1,2 +1,14 @@
+User-agent: facebookexternalhit
+Allow: /
+Disallow:
+
+User-agent: Facebot
+Allow: /
+Disallow:
+
+User-agent: WhatsApp
+Allow: /
+Disallow:
+
 User-agent: *
 Disallow:

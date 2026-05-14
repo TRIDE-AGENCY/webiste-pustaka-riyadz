@@ -56,6 +56,7 @@ class BlogController extends Controller
         $path_image = $request->file('image')->store('blogs', 'public');
 
         Blog::create([
+            'author_id'   => $request->user()?->id,
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'image'       => $path_image,
@@ -141,6 +142,7 @@ class BlogController extends Controller
         $this->cleanupEditorImages($request->content, $oldContent);
 
         $blog->update([
+            'author_id'   => $blog->author_id ?: $request->user()?->id,
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'image'       => $path_image,

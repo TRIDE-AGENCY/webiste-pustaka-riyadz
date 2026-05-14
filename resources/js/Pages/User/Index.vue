@@ -4,8 +4,8 @@
         <title>{{ pageTitle }}</title>
     </Head>
 
-    <LayoutUser :setting="setting">
-        <section class="bg-animated-dots bg-white pt-20 position-relative border-bottom border-gray-300">
+    <LayoutUser :setting="setting" footer-margin-top="0">
+        <section class="bg-animated-dots bg-white pt-20 position-relative">
             <div class="dot-base"></div>
             <div class="dot-light-sweep"></div>
             <div class="dot-fade-mask"></div>
@@ -28,68 +28,42 @@
                             Konsultasi Gratis
                         </a>
                     </div>
-                    <img :src="heroImage" :alt="heroHeading"
-                        class="w-550px w-sm-100 w-sm-850px w-md-100 mt-5 mt-md-15"
-                        @error="setFallbackImage($event, 'hero')">
+                    <img v-if="heroImage" :src="heroImage" :alt="heroHeading"
+                        class="w-550px w-sm-100 w-sm-850px w-md-100 mt-5 mt-md-15">
                 </div>
             </div>
         </section>
 
-        <section class="container w-100 mw-1100px mx-auto mt-20 pt-20">
-            <div class="d-flex flex-column w-100 mt-20">
-                <h2 class="text-center text-dark lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
-                    Alur Terstruktur
-                </h2>
-                <p class="text-center text-gray-600 fw-semibold lh-lg fs-3 mb-14 mw-650px mx-auto">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, facere modi ab non fugit, sit sequi
-                    corrupti nesciunt officiis.
-                </p>
-                <div class="row g-6 justify-content-center">
-                    <div v-for="step in processSteps" :key="step.id" class="col-12 col-sm-6 col-md-4">
-                        <div class="text-center h-100 rounded-4 p-8 transition-all bg-white border border-gray-300 duration-500"
-                            :class="activeStep === step.id
+        <section class="bg-myprimary">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column w-100">
+                    <h2 class="text-center text-white lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
+                        Alur Terstruktur
+                    </h2>
+                    <p class="text-center text-white opacity-75 fw-semibold lh-lg fs-3 mb-14 mw-650px mx-auto">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, facere modi ab non fugit, sit
+                        sequi
+                        corrupti nesciunt officiis.
+                    </p>
+                    <div class="row g-6 justify-content-center">
+                        <div v-for="step in processSteps" :key="step.id" class="col-12 col-sm-6 col-md-4">
+                            <div class="text-center h-100 rounded-4 p-8 transition-all bg-white duration-500" :class="activeStep === step.id
                                 ? 'shadow-soft'
                                 : ''">
-                            <div class="mx-auto fw-bolder fs-2hx d-flex flex-center mb-10 w-60px w-md-75px h-60px h-md-75px rounded-pill transition-all duration-500"
-                                :class="activeStep === step.id
-                                    ? 'bg-myprimary text-white'
-                                    : 'bg-myprimary-light text-myprimary opacity-50'">
-                                {{ step.id }}
-                            </div>
-                            <h3 class="fw-bolder fs-1 mb-4 transition-all duration-500"
-                                :class="activeStep === step.id ? 'text-dark' : 'text-gray-500'">
-                                {{ step.title }}
-                            </h3>
-                            <p class="fs-5 fw-semibold mb-0 transition-all duration-500"
-                                :class="activeStep === step.id ? 'text-gray-600' : 'text-gray-400'">
-                                {{ step.copy }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section v-if="safeAdvantages.length" id="advantages" class="container w-100 mw-1100px mx-auto mt-20 pt-20">
-            <div class="d-flex flex-column align-items-center w-100 mt-20">
-                <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
-                    <i class="ri-medal-fill fs-3 text-myprimary"></i>
-                    <span class="fw-bolder text-myprimary">Keunggulan</span>
-                </div>
-                <h2 class="text-center text-dark lh-sm fw-bolder fs-2tx mb-12 mw-550px mx-auto">
-                    Kenapa Memilih Kami?
-                </h2>
-                <div class="row g-0 justify-content-center w-100">
-                    <div v-for="(advantage, index) in safeAdvantages" :key="advantage.id"
-                        class="col-12 col-sm-6 card-item" style="margin: -1px;">
-                        <div class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 inner-card">
-                            <img :src="advantage.image || '/assets/media/illustrations/img-hero.png'"
-                                :alt="advantage.title" class="img-fluid flex-shrink-0 w-40px h-40px shake-icon"
-                                :style="{ 'animation-delay': `${index * 1.2}s` }"
-                                @error="setFallbackImage($event, 'default')">
-                            <div class="flex-fill">
-                                <h3 class="text-dark fw-bolder fs-2 mb-2">{{ advantage.title }}</h3>
-                                <p class="text-gray-600 fs-5 fw-semibold mb-0">{{ advantage.description }}</p>
+                                <div class="mx-auto fw-bolder fs-2hx d-flex flex-center mb-10 w-60px w-md-75px h-60px h-md-75px rounded-pill transition-all duration-500"
+                                    :class="activeStep === step.id
+                                        ? 'bg-myprimary text-white'
+                                        : 'bg-myprimary-light text-myprimary opacity-50'">
+                                    {{ step.id }}
+                                </div>
+                                <h3 class="fw-bolder fs-1 mb-4 transition-all duration-500"
+                                    :class="activeStep === step.id ? 'text-dark' : 'text-gray-500'">
+                                    {{ step.title }}
+                                </h3>
+                                <p class="fs-5 fw-semibold mb-0 transition-all duration-500"
+                                    :class="activeStep === step.id ? 'text-gray-600' : 'text-gray-400'">
+                                    {{ step.copy }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -97,33 +71,60 @@
             </div>
         </section>
 
-        <section v-if="safeBooks.length" id="books" class="bg-white border border-right-0 border-left-0 border-gray-300"
-            style="margin-top: 10rem;">
-            <div class="container mw-1100px mx-auto my-15 py-20">
-                <div class="d-flex flex-column align-items-center align-items-md-start w-100 mb-14">
+        <section v-if="safeAdvantages.length" id="advantages">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column align-items-center w-100">
                     <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
+                        <i class="ri-medal-fill fs-3 text-myprimary"></i>
+                        <span class="fw-bolder text-myprimary">Keunggulan</span>
+                    </div>
+                    <h2 class="text-center text-dark lh-sm fw-bolder fs-2tx mb-12 mw-550px mx-auto">
+                        Kenapa Memilih Kami?
+                    </h2>
+                    <div class="row g-0 justify-content-center w-100">
+                        <div v-for="(advantage, index) in safeAdvantages" :key="advantage.id"
+                            class="col-12 col-sm-6 card-item" style="margin: -1px;">
+                            <div class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 inner-card">
+                                <img v-if="advantage.image" :src="advantage.image"
+                                    :alt="advantage.title" class="img-fluid flex-shrink-0 w-40px h-40px shake-icon"
+                                    :style="{ 'animation-delay': `${index * 1.2}s` }">
+                                <div class="flex-fill">
+                                    <h3 class="text-dark fw-bolder fs-2 mb-2">{{ advantage.title }}</h3>
+                                    <p class="text-gray-600 fs-5 fw-semibold mb-0">{{ advantage.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section v-if="safeBooks.length" id="books" class="bg-myprimary">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column align-items-center align-items-md-start w-100 mb-14">
+                    <!-- <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
                         <i class="ri-book-open-fill fs-3 text-myprimary"></i>
                         <span class="fw-bolder text-myprimary">{{ safeBooks.length }} Buku Tersedia</span>
-                    </div>
+                    </div> -->
                     <div
                         class="d-flex flex-column w-100 flex-md-row gap-8 align-items-center align-items-md-end justify-content-md-between">
                         <div class="mw-700px">
-                            <h2 class="text-center text-md-start text-dark lh-sm fw-bolder fs-2tx mb-6">
+                            <h2 class="text-center text-md-start text-white lh-sm fw-bolder fs-2tx mb-6">
                                 Jelajahi Terbitan Kami
                             </h2>
-                            <p class="text-center text-md-start text-gray-600 fw-semibold lh-lg fs-3 mb-0">
+                            <p class="text-center text-md-start text-white opacity-75 fw-semibold lh-lg fs-3 mb-0">
                                 Temukan berbagai karya literatur dan publikasi berkualitas yang telah kami terbitkan di
                                 {{ setting.site_title }}.
                             </p>
                         </div>
                         <div class="d-none d-md-flex gap-2">
                             <button type="button"
-                                class="w-45px h-45px border-none rounded-pill btn btn-icon btn-myprimary-filled book-slider-prev"
+                                class="w-45px h-45px border-none rounded-pill btn btn-icon btn-mywhite-filled book-slider-prev"
                                 aria-label="Buku sebelumnya">
                                 <i class="ri-arrow-left-line fs-2"></i>
                             </button>
                             <button type="button"
-                                class="w-45px h-45px border-none rounded-pill btn btn-icon btn-myprimary-filled book-slider-next"
+                                class="w-45px h-45px border-none rounded-pill btn btn-icon btn-mywhite-filled book-slider-next"
                                 aria-label="Buku berikutnya">
                                 <i class="ri-arrow-right-line fs-2"></i>
                             </button>
@@ -137,16 +138,15 @@
                         :navigation="{ prevEl: '.book-slider-prev', nextEl: '.book-slider-next' }"
                         :pagination="{ el: '.book-slider-pagination', clickable: true }">
                         <SwiperSlide v-for="book in safeBooks" :key="book.id">
-                            <article
-                                class="d-flex flex-column bg-light rounded-4 p-2 border border-gray-300 h-100 cursor-pointer"
+                            <article class="d-flex flex-column bg-white rounded-4 p-2 h-100 cursor-pointer"
                                 role="button" tabindex="0" @click="goToBook(book)"
-                                @keydown.enter.prevent="goToBook(book)"
-                                @keydown.space.prevent="goToBook(book)">
-                                <img :src="book.image || '/assets/media/illustrations/img-book.png'" :alt="book.title"
-                                    class="img-fluid rounded-3" @error="setFallbackImage($event, 'book')">
+                                @keydown.enter.prevent="goToBook(book)" @keydown.space.prevent="goToBook(book)">
+                                <img v-if="book.image" :src="book.image" :alt="book.title"
+                                    class="img-fluid rounded-3">
                                 <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
                                     <h3 class="text-dark fw-bolder fs-2 mb-2">{{ book.title }}</h3>
-                                    <p class="text-gray-600 fs-5 fw-semibold mb-5">{{ book.author }} • {{ book.year }}</p>
+                                    <p class="text-gray-600 fs-5 fw-semibold mb-5">{{ book.author }} • {{ book.year }}
+                                    </p>
                                     <div
                                         class="d-flex align-items-center w-100 gap-2 mt-auto pt-5 border-top border-gray-300">
                                         <div class="flex-fill">
@@ -170,8 +170,8 @@
         </section>
 
         <section v-if="safeServices.length" id="services">
-            <div class="container mw-1100px mx-auto pt-20">
-                <div class="mt-20 d-flex flex-column align-items-center align-items-md-start w-100 mb-14">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column align-items-center align-items-md-start w-100 mb-14">
                     <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
                         <i class="ri-service-fill fs-3 text-myprimary"></i>
                         <span class="fw-bolder text-myprimary">Layanan</span>
@@ -197,18 +197,16 @@
                 <div class="row g-6 justify-content-center align-items-stretch">
                     <div v-for="service in safeServices" :key="service.id" class="col-12 col-sm-6 col-xl-4">
                         <article class="d-flex flex-column bg-white rounded-4 p-2 border border-gray-300 h-100">
-                            <div class="ratio ratio-4x3 rounded-3 overflow-hidden">
-                                <img :src="service.image || '/assets/media/illustrations/img-hero.png'"
-                                    :alt="service.name" class="img-fluid object-fit-cover w-100 h-100"
-                                    @error="setFallbackImage($event, 'service')">
+                            <div v-if="service.image" class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                                <img :src="service.image" :alt="service.name"
+                                    class="img-fluid object-fit-cover w-100 h-100">
                             </div>
                             <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
                                 <h3 class="text-dark fw-bolder fs-2 mb-2">{{ service.name }}</h3>
                                 <p class="text-gray-600 fs-5 fw-semibold mb-5">{{ service.short_description }}</p>
 
                                 <span class="mt-auto fs-3 text-dark fw-bolder">{{ servicePrice(service) }}</span>
-                                <button type="button"
-                                    @click="openServiceModal(service)"
+                                <button type="button" @click="openServiceModal(service)"
                                     class="mt-5 w-100 align-items-center justify-content-center d-flex gap-1 fs-5 rounded-3 btn btn-sm btn-hover-icon btn-myprimary-tinted fw-bolder">
                                     <span>Lihat Detail</span>
                                     <i class="ri-arrow-right-up-line fw-bold fs-2 me-n3"></i>
@@ -227,84 +225,95 @@
             </div>
         </section>
 
-        <section v-if="safeTestimonials.length" id="testimonials" class="container w-100 mw-1200px mx-auto mt-20 pt-20">
-            <div class="d-flex flex-column align-items-center text-center w-100 mt-20">
-                <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
-                    <i class="ri-chat-quote-fill fs-3 text-myprimary"></i>
-                    <span class="fw-bolder text-myprimary">Testimoni</span>
-                </div>
-                <h2 class="text-center text-dark lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
-                    Apa Kata Mereka?
-                </h2>
-                <p class="text-center text-gray-600 fw-semibold lh-lg fs-3 mb-14 mw-650px mx-auto">
-                    Dari mereka yang telah merasakan manfaat layanan kami.
-                </p>
-            </div>
-
-            <div class="testimonial-marquee" aria-label="Daftar testimoni">
-                <div class="testimonial-marquee-track">
-                    <div class="testimonial-marquee-group me-6">
-                        <article v-for="(testimonial, index) in testimonialMarqueeItems"
-                            :key="`testimonial-${testimonial.id}-${index}`" class="d-flex flex-column h-100 bg-white border border-gray-300 p-8 w-275px w-sm-300px w-md-325px rounded-4">
-                            <div class="d-flex align-items-center gap-4 mb-8">
-                                <div class="flex-shrink-0 ratio ratio-1x1 rounded-pill w-50px h-50px overflow-hidden">
-                                    <img :src="testimonial.image || '/assets/media/illustrations/img-book.jpeg'"
-                                        :alt="testimonial.name" class="img-fluid object-fit-cover w-100 h-100"
-                                        @error="setFallbackImage($event, 'avatar')">
-                                </div>
-                                <div class="min-w-0">
-                                    <h3 class="text-dark fs-4 fw-bolder mb-1 text-truncate-1">
-                                        {{ testimonial.name }}
-                                    </h3>
-                                    <p class="text-gray-600 fs-5 fw-semibold mb-0 text-truncate-1">
-                                        {{ testimonial.position }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="mt-auto d-flex gap-1 mb-5">
-                                <i v-for="star in ratingStars(testimonial.rating)" :key="star"
-                                    class="ri-star-fill text-myprimary fs-1"></i>
-                            </div>
-                            <p class="text-dark fs-5 fw-semibold lh-lg mb-0">
-                                {{ testimonial.message }}
-                            </p>
-                        </article>
+        <section v-if="safeTestimonials.length" id="testimonials" class="bg-myprimary">
+            <div class="container w-100 mw-1200px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column align-items-center text-center w-100">
+                    <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
+                        <i class="ri-chat-quote-fill fs-3 text-myprimary"></i>
+                        <span class="fw-bolder text-myprimary">Testimoni</span>
                     </div>
+                    <h2 class="text-center text-white lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
+                        Apa Kata Mereka?
+                    </h2>
+                    <p class="text-center text-white opacity-75 fw-semibold lh-lg fs-3 mb-14 mw-650px mx-auto">
+                        Dari mereka yang telah merasakan manfaat layanan kami.
+                    </p>
+                </div>
 
-                    <div class="testimonial-marquee-group">
-                        <article v-for="(testimonial, index) in testimonialMarqueeItems"
-                            :key="`testimonial-${testimonial.id}-${index}`" class="d-flex flex-column h-100 bg-white border border-gray-300 p-8 w-275px w-sm-300px w-md-325px rounded-4">
-                            <div class="d-flex align-items-center gap-4 mb-8">
-                                <div class="flex-shrink-0 ratio ratio-1x1 rounded-pill w-50px h-50px overflow-hidden">
-                                    <img :src="testimonial.image || '/assets/media/illustrations/img-book.jpeg'"
-                                        :alt="testimonial.name" class="img-fluid object-fit-cover w-100 h-100"
-                                        @error="setFallbackImage($event, 'avatar')">
+                <div class="testimonial-marquee" aria-label="Daftar testimoni">
+                    <div class="testimonial-marquee-track">
+                        <div class="testimonial-marquee-group me-6">
+                            <article v-for="(testimonial, index) in testimonialMarqueeItems"
+                                :key="`testimonial-${testimonial.id}-${index}`"
+                                class="d-flex flex-column h-100 bg-white p-8 w-275px w-sm-300px w-md-325px rounded-4 cursor-pointer"
+                                role="button" tabindex="0" :aria-label="`Lihat detail testimoni ${testimonial.name}`"
+                                @click="openTestimonialModal(testimonial)"
+                                @keydown.enter.prevent="openTestimonialModal(testimonial)"
+                                @keydown.space.prevent="openTestimonialModal(testimonial)">
+                                <div class="d-flex align-items-center gap-4 mb-8">
+                                    <div v-if="testimonial.image"
+                                        class="flex-shrink-0 ratio ratio-1x1 rounded-pill w-50px h-50px overflow-hidden">
+                                        <img :src="testimonial.image" :alt="testimonial.name"
+                                            class="img-fluid object-fit-cover w-100 h-100">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h3 class="text-dark fs-4 fw-bolder mb-1 text-truncate-1">
+                                            {{ testimonial.name }}
+                                        </h3>
+                                        <p class="text-gray-600 fs-5 fw-semibold mb-0 text-truncate-1">
+                                            {{ testimonial.position }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="min-w-0">
-                                    <h3 class="text-dark fs-4 fw-bolder mb-1 text-truncate-1">
-                                        {{ testimonial.name }}
-                                    </h3>
-                                    <p class="text-gray-600 fs-5 fw-semibold mb-0 text-truncate-1">
-                                        {{ testimonial.position }}
-                                    </p>
+                                <div class="mt-auto d-flex gap-1 mb-5">
+                                    <i v-for="star in ratingStars(testimonial.rating)" :key="star"
+                                        class="ri-star-fill text-myprimary fs-1"></i>
                                 </div>
-                            </div>
-                            <div class="mt-auto d-flex gap-1 mb-5">
-                                <i v-for="star in ratingStars(testimonial.rating)" :key="star"
-                                    class="ri-star-fill text-myprimary fs-1"></i>
-                            </div>
-                            <p class="text-dark fs-5 fw-semibold lh-lg mb-0">
-                                {{ testimonial.message }}
-                            </p>
-                        </article>
+                                <p class="testimonial-message text-dark fs-5 fw-semibold lh-lg mb-0">
+                                    {{ testimonial.message }}
+                                </p>
+                            </article>
+                        </div>
+
+                        <div class="testimonial-marquee-group">
+                            <article v-for="(testimonial, index) in testimonialMarqueeItems"
+                                :key="`testimonial-${testimonial.id}-${index}`"
+                                class="d-flex flex-column h-100 bg-white p-8 w-275px w-sm-300px w-md-325px rounded-4 cursor-pointer"
+                                role="button" tabindex="0" :aria-label="`Lihat detail testimoni ${testimonial.name}`"
+                                @click="openTestimonialModal(testimonial)"
+                                @keydown.enter.prevent="openTestimonialModal(testimonial)"
+                                @keydown.space.prevent="openTestimonialModal(testimonial)">
+                                <div class="d-flex align-items-center gap-4 mb-8">
+                                    <div v-if="testimonial.image"
+                                        class="flex-shrink-0 ratio ratio-1x1 rounded-pill w-50px h-50px overflow-hidden">
+                                        <img :src="testimonial.image" :alt="testimonial.name"
+                                            class="img-fluid object-fit-cover w-100 h-100">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h3 class="text-dark fs-4 fw-bolder mb-1 text-truncate-1">
+                                            {{ testimonial.name }}
+                                        </h3>
+                                        <p class="text-gray-600 fs-5 fw-semibold mb-0 text-truncate-1">
+                                            {{ testimonial.position }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto d-flex gap-1 mb-5">
+                                    <i v-for="star in ratingStars(testimonial.rating)" :key="star"
+                                        class="ri-star-fill text-myprimary fs-1"></i>
+                                </div>
+                                <p class="testimonial-message text-dark fs-5 fw-semibold lh-lg mb-0">
+                                    {{ testimonial.message }}
+                                </p>
+                            </article>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section v-if="safeBlogs.length" id="blogs" class="bg-white border border-right-0 border-left-0 border-gray-300"
-            style="margin-top: 10rem;">
-            <div class="container mw-1100px mx-auto my-15 py-20">
+        <section v-if="safeBlogs.length">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
                 <div class="d-flex flex-column align-items-center align-items-md-start w-100 mb-14">
                     <div
                         class="d-flex flex-column w-100 flex-md-row gap-8 align-items-center align-items-md-end justify-content-md-between">
@@ -337,15 +346,13 @@
                         :navigation="{ prevEl: '.blog-slider-prev', nextEl: '.blog-slider-next' }"
                         :pagination="{ el: '.blog-slider-pagination', clickable: true }">
                         <SwiperSlide v-for="blog in safeBlogs" :key="blog.id">
-                            <article 
-                                class="d-flex flex-column bg-light rounded-4 p-2 border border-gray-300 h-100 cursor-pointer"
+                            <article
+                                class="d-flex flex-column bg-white rounded-4 p-2 border border-gray-300 h-100 cursor-pointer"
                                 role="button" tabindex="0" @click="goToBlog(blog)"
-                                @keydown.enter.prevent="goToBlog(blog)"
-                                @keydown.space.prevent="goToBlog(blog)">
-                                <div class="ratio ratio-4x3 rounded-3 overflow-hidden">
-                                    <img :src="blog.image || '/assets/media/illustrations/img-hero.png'"
-                                        :alt="blog.title" class="img-fluid object-fit-cover w-100 h-100"
-                                        @error="setFallbackImage($event, 'default')">
+                                @keydown.enter.prevent="goToBlog(blog)" @keydown.space.prevent="goToBlog(blog)">
+                                <div v-if="blog.image" class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                                    <img :src="blog.image" :alt="blog.title"
+                                        class="img-fluid object-fit-cover w-100 h-100">
                                 </div>
                                 <div class="p-6 pt-8 d-flex flex-column flex-grow-1">
                                     <h3 class="text-dark fw-bolder text-truncate-2 fs-2 mb-2">{{ blog.title }}</h3>
@@ -359,50 +366,56 @@
             </div>
         </section>
 
-        <section v-if="safeFaqs.length" id="faqs" class="container w-100 mw-1100px mx-auto pt-20">
-            <div class="mt-20 d-flex flex-column align-items-center text-center w-100">
-                <div class="row g-8 ">
-                    <div class="col-12 col-lg-5 justify-content-center justify-content-lg-start text-center text-lg-start">
-                        <div class="d-inline-flex px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
-                            <i class="ri-chat-quote-fill fs-3 text-myprimary"></i>
-                            <span class="fw-bolder text-myprimary">FAQs</span>
+        <section v-if="safeFaqs.length" id="faqs" class="bg-myprimary">
+            <div class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem; padding-bottom: 15rem;">
+                <div class="d-flex flex-column align-items-center text-center w-100">
+                    <div class="row g-8 ">
+                        <div
+                            class="faq-heading-sticky col-12 col-lg-5 justify-content-center justify-content-lg-start text-center text-lg-start">
+                            <div
+                                class="d-inline-flex px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
+                                <i class="ri-chat-quote-fill fs-3 text-myprimary"></i>
+                                <span class="fw-bolder text-myprimary">FAQs</span>
+                            </div>
+                            <h2 class="text-white lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
+                                Yang Paling <br> Sering Ditanyakan
+                            </h2>
+                            <p class="text-white fw-semibold lh-lg fs-3 mb-0 mw-650px mx-auto">
+                                <span class="opacity-75">Masih ada yang ingin ditanyakan? Tim kami siap membantu.</span> <a href="#contact"
+                                    class="fs-3 fw-bolder btn-link btn-link-mywhite">Hubungi Kami</a>
+                            </p>
                         </div>
-                        <h2 class="text-dark lh-sm fw-bolder fs-2tx mb-6 mw-550px mx-auto">
-                            Yang Paling <br> Sering Ditanyakan
-                        </h2>
-                        <p class="text-gray-600 fw-semibold lh-lg fs-3 mb-0 mw-650px mx-auto">
-                            Masih ada yang ingin ditanyakan? Tim kami siap membantu. <a href="#contact" class="fs-3 fw-bolder btn-link btn-link-myprimary">Hubungi Kami</a>
-                        </p>
-                    </div>
-                    <div class="col-12 col-lg-7">
-                        <div class="d-flex flex-column gap-4">
-                            <div v-for="(faq, index) in safeFaqs" :key="faq.id"
-                                class="bg-white rounded-4 border overflow-hidden transition-all"
-                                :class="activeFaq === faq.id ? 'border-myprimary shadow-soft' : 'border-gray-300'">
-                                <button type="button"
-                                    class="btn w-100 d-flex align-items-center justify-content-between gap-5 text-start rounded-0 px-6 py-5"
-                                    :class="activeFaq === faq.id ? 'bg-myprimary-light' : 'bg-white'"
-                                    :aria-expanded="activeFaq === faq.id"
-                                    :aria-controls="`faq-answer-${faq.id}`"
-                                    @click="activeFaq = activeFaq === faq.id ? null : faq.id">
-                                    <span class="d-flex align-items-center gap-4 min-w-0">
-                                        <span class="w-30px h-30px flex-shrink-0 rounded-pill d-flex flex-center fs-6 fw-bolder"
-                                            :class="activeFaq === faq.id ? 'bg-myprimary text-white' : 'bg-myprimary-light text-myprimary'">
-                                            {{ index + 1 }}
+                        <div class="col-12 col-lg-7">
+                            <div class="d-flex flex-column gap-4">
+                                <div v-for="(faq, index) in safeFaqs" :key="faq.id"
+                                    class="bg-white rounded-4 overflow-hidden transition-all"
+                                    :class="activeFaq === faq.id ? 'shadow-soft' : ''">
+                                    <button type="button"
+                                        class="btn w-100 d-flex align-items-center justify-content-between gap-5 text-start rounded-0 px-6 py-5"
+                                        :class="activeFaq === faq.id ? 'bg-myprimary-light' : 'bg-white'"
+                                        :aria-expanded="activeFaq === faq.id" :aria-controls="`faq-answer-${faq.id}`"
+                                        @click="activeFaq = activeFaq === faq.id ? null : faq.id">
+                                        <span class="d-flex align-items-center gap-4 min-w-0">
+                                            <span
+                                                class="w-30px h-30px flex-shrink-0 rounded-pill d-flex flex-center fs-6 fw-bolder"
+                                                :class="activeFaq === faq.id ? 'bg-myprimary text-white' : 'bg-myprimary-light text-myprimary'">
+                                                {{ index + 1 }}
+                                            </span>
+                                            <span class="text-dark fs-5 fw-bolder lh-base">
+                                                {{ faq.question }}
+                                            </span>
                                         </span>
-                                        <span class="text-dark fs-5 fw-bolder lh-base">
-                                            {{ faq.question }}
+                                        <span class="w-38px h-38px flex-shrink-0 rounded-pill d-flex flex-center"
+                                            :class="activeFaq === faq.id ? 'bg-myprimary text-white' : 'bg-light text-myprimary'">
+                                            <i
+                                                :class="[activeFaq === faq.id ? 'ri-subtract-line text-myprimary' : 'ri-add-line', 'fs-3']"></i>
                                         </span>
-                                    </span>
-                                    <span class="w-38px h-38px flex-shrink-0 rounded-pill d-flex flex-center"
-                                        :class="activeFaq === faq.id ? 'bg-myprimary text-white' : 'bg-light text-myprimary'">
-                                        <i :class="[activeFaq === faq.id ? 'ri-subtract-line text-myprimary' : 'ri-add-line', 'fs-3']"></i>
-                                    </span>
-                                </button>
-                                <div v-if="activeFaq === faq.id" :id="`faq-answer-${faq.id}`"
-                                    class="px-6 pb-5 bg-white faq-answer">
-                                    <div class="editor-content pt-5 text-start text-dark fs-6 fw-semibold lh-lg faq-answer-content"
-                                        v-html="faq.answer"></div>
+                                    </button>
+                                    <div v-if="activeFaq === faq.id" :id="`faq-answer-${faq.id}`"
+                                        class="px-6 pb-5 bg-white faq-answer">
+                                        <div class="editor-content pt-5 text-start text-dark fs-6 fw-semibold lh-lg faq-answer-content"
+                                            v-html="faq.answer"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -412,88 +425,110 @@
         </section>
 
         <section v-if="safeManuscriptCategories.length" id="contact"
-            class="container w-100 mw-1100px mx-auto mt-20 pt-20">
-                <div class="row align-items-stretch g-6 g-lg-10 pt-20">
-                    <div class="col-12 col-lg-5">
-                        <div class="bg-myprimary rounded-4 p-10 p-lg-12 d-flex flex-column">
-                            <h2 class="fs-2tx text-white fw-bolder mb-5">
-                                Siap Menerbitkan Karya Anda?
-                            </h2>
-                            <p class="text-white opacity-75 fs-3 fw-semibold lh-lg mb-14">
-                                Pilih kategori naskah yang sesuai, siapkan berkas utama, lalu hubungi tim kami untuk
-                                arahan pengiriman dan proses penerbitan.
-                            </p>
-                            <div class="d-flex flex-wrap gap-4 mt-auto">
-                                <a :href="whatsappLink" target="_blank" class="" aria-label="WhatsApp">
-                                    <i class="ri-whatsapp-line fs-2x text-white"></i>
-                                </a>
-                                <a v-if="setting?.email" :href="`mailto:${setting.email}`" class=""
-                                    aria-label="Email">
-                                    <i class="ri-mail-line fs-2x text-white"></i>
-                                </a>
-                                <a v-if="setting?.instagram" :href="setting.instagram" target="_blank"
-                                    class="" aria-label="Instagram">
-                                    <i class="ri-instagram-line fs-2x text-white"></i>
-                                </a>
-                                <a v-if="setting?.linkedin" :href="setting.linkedin" target="_blank"
-                                    class="" aria-label="LinkedIn">
-                                    <i class="ri-linkedin-box-fill fs-2x text-white"></i>
-                                </a>
-                            </div>
+            class="container w-100 mw-1100px mx-auto" style="padding-top: 15rem;">
+            <div class="row align-items-stretch g-6 g-lg-10">
+                <div class="col-12 col-lg-5">
+                    <div class="contact-card-sticky bg-myprimary rounded-4 p-10 p-lg-12 d-flex flex-column">
+                        <h2 class="fs-2tx text-white fw-bolder mb-5">
+                            Siap Menerbitkan Karya Anda?
+                        </h2>
+                        <p class="text-white opacity-75 fs-3 fw-semibold lh-lg mb-14">
+                            Pilih kategori naskah yang sesuai, siapkan berkas utama, lalu hubungi tim kami untuk
+                            arahan pengiriman dan proses penerbitan.
+                        </p>
+                        <div class="d-flex flex-wrap gap-4 mt-auto">
+                            <a :href="whatsappLink" target="_blank" class="" aria-label="WhatsApp">
+                                <i class="ri-whatsapp-line fs-2x text-white"></i>
+                            </a>
+                            <a v-if="setting?.email" :href="`mailto:${setting.email}`" class="" aria-label="Email">
+                                <i class="ri-mail-line fs-2x text-white"></i>
+                            </a>
+                            <a v-if="setting?.instagram" :href="setting.instagram" target="_blank" class=""
+                                aria-label="Instagram">
+                                <i class="ri-instagram-line fs-2x text-white"></i>
+                            </a>
+                            <a v-if="setting?.linkedin" :href="setting.linkedin" target="_blank" class=""
+                                aria-label="LinkedIn">
+                                <i class="ri-linkedin-box-fill fs-2x text-white"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-7">
-                        <div class="h-100">
-                            <div class="row g-6">
-                                <div v-for="(category, index) in safeManuscriptCategories" :key="category.id" class="col-12">
-                                    <article
-                                        class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 rounded-4 cursor-pointer"
-                                        role="button" tabindex="0"
-                                        @click="openManuscriptCategoryModal(category)"
-                                        @keydown.enter.prevent="openManuscriptCategoryModal(category)"
-                                        @keydown.space.prevent="openManuscriptCategoryModal(category)">
-                                        <img :src="category.image || '/assets/media/illustrations/img-hero.png'"
-                                            :alt="category.title" class="img-fluid flex-shrink-0 w-55px h-55px shake-icon"
-                                            :style="{ 'animation-delay': `${index * 1.2}s` }"
-                                            @error="setFallbackImage($event, 'default')">
-                                        <div class="flex-fill">
-                                            <h3 class="text-dark fw-bolder fs-2 mb-2">{{ category.title }}</h3>
-                                            <p class="text-gray-600 fs-5 fw-semibold mb-5">{{ category.description }}</p>
-                                            <div class="d-flex flex-wrap gap-3 align-self-start">
-                                                <span class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
-                                                    {{ category.requirements.length }} Persyaratan
-                                                </span>
-                                                <span class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
-                                                    {{ category.attachments.length }} Lampiran
-                                                </span>
-                                                <span v-if="category.document_count"
-                                                    class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
-                                                    {{ category.document_count }} Dokumen
-                                                </span>
-                                            </div>
+                </div>
+                <div class="col-12 col-lg-7">
+                    <div class="h-100">
+                        <div class="row g-6">
+                            <div v-for="(category, index) in safeManuscriptCategories" :key="category.id"
+                                class="col-12">
+                                <article
+                                    class="d-flex gap-7 p-8 bg-white border border-gray-300 h-100 rounded-4 cursor-pointer"
+                                    role="button" tabindex="0" @click="openManuscriptCategoryModal(category)"
+                                    @keydown.enter.prevent="openManuscriptCategoryModal(category)"
+                                    @keydown.space.prevent="openManuscriptCategoryModal(category)">
+                                    <img v-if="category.image" :src="category.image"
+                                        :alt="category.title" class="img-fluid flex-shrink-0 w-55px h-55px shake-icon"
+                                        :style="{ 'animation-delay': `${index * 1.2}s` }">
+                                    <div class="flex-fill">
+                                        <h3 class="text-dark fw-bolder fs-2 mb-2">{{ category.title }}</h3>
+                                        <p class="text-gray-600 fs-5 fw-semibold mb-5">{{ category.description }}</p>
+                                        <div class="d-flex flex-wrap gap-3 align-self-start">
+                                            <span
+                                                class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
+                                                {{ category.requirements.length }} Persyaratan
+                                            </span>
+                                            <span
+                                                class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
+                                                {{ category.attachments.length }} Lampiran
+                                            </span>
+                                            <span v-if="category.document_count"
+                                                class="px-4 py-2 bg-gray-200 text-gray-600 rounded-pill fs-7 fw-bolder">
+                                                {{ category.document_count }} Dokumen
+                                            </span>
                                         </div>
-                                    </article>
-                                </div>
+                                    </div>
+                                </article>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
 
-        <div id="serviceDetailModal" class="modal fade" tabindex="-1"
-            aria-labelledby="serviceDetailModalTitle" aria-hidden="true">
+        <section class="container w-100 mw-1100px mx-auto" style="padding-top: 12rem; padding-bottom: 12rem;">
+            <div class="bg-myprimary rounded-4 border border-gray-300 p-10 p-lg-14">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="px-7 py-3 bg-myprimary-light d-flex align-items-center gap-2 rounded-pill fs-5 mb-7">
+                        <i class="ri-customer-service-2-fill fs-3 text-myprimary"></i>
+                        <span class="fw-bolder text-myprimary">Yuk Diskusi</span>
+                    </div>
+                    <h2 class="text-white lh-sm fw-bolder fs-2tx mb-6 mw-650px mx-auto">
+                        Konsultasi Gratis
+                    </h2>
+                    <p class="text-white opacity-75 fw-semibold lh-lg fs-3 mb-10 mw-700px mx-auto">
+                        Dapatkan rekomendasi paket penerbitan, informasi harga promo, dan diskon terbaik yang tersedia
+                        bulan ini.
+                    </p>
+                    <a :href="consultationWhatsAppLink" target="_blank" rel="noopener"
+                        class="btn btn-mywhite-filled justify-content-center d-inline-flex align-items-center gap-2 rounded-3 fs-5 fw-bolder">
+                        <i class="ri-whatsapp-line fw-normal fs-3"></i>
+                        <span>Hubungi Kami</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div id="serviceDetailModal" class="modal fade" tabindex="-1" aria-labelledby="serviceDetailModalTitle"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-6 mw-600px mx-auto">
                 <div class="modal-content rounded-4">
-                    <div v-if="selectedService"
-                        class="modal-body p-2 position-relative">
-                        <button type="button" class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
+                    <div v-if="selectedService" class="modal-body p-2 position-relative">
+                        <button type="button"
+                            class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
                             data-bs-dismiss="modal" aria-label="Close">
                             <i class="cursor-pointer ri-close-large-line text-white fs-1"></i>
                         </button>
-                        <div class="ratio ratio-4x3 rounded-3 overflow-hidden">
-                            <img :src="selectedService.image || '/assets/media/illustrations/img-hero.png'"
-                                :alt="selectedService.name" class="img-fluid object-fit-cover w-100 h-100"
-                                @error="setFallbackImage($event, 'service')">
+                        <div v-if="selectedService.image" class="ratio ratio-4x3 rounded-3 overflow-hidden">
+                            <img :src="selectedService.image" :alt="selectedService.name"
+                                class="img-fluid object-fit-cover w-100 h-100">
                         </div>
                         <div class="p-6 pt-8">
                             <h2 id="serviceDetailModalTitle" class="fs-2x text-dark fw-bolder mb-3">
@@ -505,17 +540,18 @@
 
                             <div v-if="selectedServiceSections.length"
                                 class="d-flex align-items-center gap-5 mb-6 mt-7 pt-7 border-top border-gray-300">
-                                <i class="ri-service-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <i
+                                    class="ri-service-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                                 <div>
                                     <h2 class="text-dark fw-bolder fs-3 mb-2">Informasi Layanan</h2>
-                                    <span class="text-gray-600 fs-5 fw-semibold">Lihat apa saja yang bisa kamu dapatkan.</span>
+                                    <span class="text-gray-600 fs-5 fw-semibold">Lihat apa saja yang bisa kamu
+                                        dapatkan.</span>
                                 </div>
                             </div>
                             <div v-if="selectedServiceSections.length" class="ps-18 ps-md-20">
                                 <div class="d-flex flex-column gap-6">
                                     <article v-for="(section, index) in selectedServiceSections"
-                                        :key="section.title || index"
-                                        class="border border-gray-300 rounded-3 p-5">
+                                        :key="section.title || index" class="border border-gray-300 rounded-3 p-5">
                                         <h4 class="text-dark fw-bolder fs-3 mb-4">
                                             {{ section.title || `Konten ${index + 1}` }}
                                         </h4>
@@ -540,15 +576,18 @@
                             </div>
                             <div v-if="selectedService.starting_price"
                                 class="d-flex align-items-center gap-5 mt-7 pt-7 border-top border-gray-300">
-                                <i class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <i
+                                    class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                                 <div>
                                     <span class="text-gray-600 fs-5 fw-semibold">Harga Layanan</span>
-                                    <h2 class="text-dark fw-bolder fs-3 mt-2 mb-0">{{ selectedService.starting_price }}</h2>
+                                    <h2 class="text-dark fw-bolder fs-3 mt-2 mb-0">{{ selectedService.starting_price }}
+                                    </h2>
                                 </div>
                             </div>
                             <div v-if="selectedServicePackages.length"
                                 class="d-flex align-items-center gap-5 mb-6 mt-7 pt-7 border-top border-gray-300">
-                                <i class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                                <i
+                                    class="ri-price-tag-3-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                                 <div>
                                     <h2 class="text-dark fw-bolder fs-3 mb-2">Paket Layanan</h2>
                                     <span class="text-gray-600 fs-5 fw-semibold">Sesuaikan dengan kebutuhanmu.</span>
@@ -598,16 +637,16 @@
             aria-labelledby="manuscriptCategoryModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-6 mw-600px mx-auto">
                 <div class="modal-content rounded-4">
-                    <div v-if="selectedManuscriptCategory"
-                        class="modal-body p-8 position-relative">
-                        <button type="button" class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
+                    <div v-if="selectedManuscriptCategory" class="modal-body p-8 position-relative">
+                        <button type="button"
+                            class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
                             data-bs-dismiss="modal" aria-label="Close">
                             <i class="cursor-pointer ri-close-large-line text-white fs-1"></i>
                         </button>
-                        <div class="ratio mx-auto mb-8 mt-2 ratio-1x1 w-100px h-100px overflow-hidden">
-                            <img :src="selectedManuscriptCategory.image || '/assets/media/illustrations/img-hero.png'"
-                                :alt="selectedManuscriptCategory.title" class="img-fluid object-fit-cover w-100 h-100"
-                                @error="setFallbackImage($event, 'default')">
+                        <div v-if="selectedManuscriptCategory.image"
+                            class="ratio mx-auto mb-8 mt-2 ratio-1x1 w-100px h-100px overflow-hidden">
+                            <img :src="selectedManuscriptCategory.image" :alt="selectedManuscriptCategory.title"
+                                class="img-fluid object-fit-cover w-100 h-100">
                         </div>
                         <h2 id="manuscriptCategoryModalTitle" class="fs-2x text-dark text-center fw-bolder mb-3">
                             {{ selectedManuscriptCategory.title }}
@@ -618,18 +657,19 @@
 
                         <div v-if="selectedManuscriptRequirements.length"
                             class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
-                            <i class="ri-file-check-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <i
+                                class="ri-file-check-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                             <div>
                                 <h2 class="text-dark fw-bolder fs-3 mb-2">Persyaratan Naskah</h2>
-                                <span class="text-gray-600 fs-5 fw-semibold">Pastikan poin berikut sudah terpenuhi.</span>
+                                <span class="text-gray-600 fs-5 fw-semibold">Pastikan poin berikut sudah
+                                    terpenuhi.</span>
                             </div>
                         </div>
                         <div v-if="selectedManuscriptRequirements.length" class="ps-17 ps-md-19">
                             <ul class="service-modal-list">
                                 <li v-for="item in selectedManuscriptRequirements" :key="item"
                                     class="d-flex align-items-start gap-2">
-                                    <i style="margin-top: 2px;"
-                                        class="ri-checkbox-circle-fill text-myprimary fs-3"></i>
+                                    <i style="margin-top: 2px;" class="ri-checkbox-circle-fill text-myprimary fs-3"></i>
                                     <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
                                 </li>
                             </ul>
@@ -637,18 +677,19 @@
 
                         <div v-if="selectedManuscriptAttachments.length"
                             class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
-                            <i class="ri-attachment-2 p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <i
+                                class="ri-attachment-2 p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                             <div>
                                 <h2 class="text-dark fw-bolder fs-3 mb-2">Lampiran</h2>
-                                <span class="text-gray-600 fs-5 fw-semibold">Berkas pendukung yang perlu disiapkan.</span>
+                                <span class="text-gray-600 fs-5 fw-semibold">Berkas pendukung yang perlu
+                                    disiapkan.</span>
                             </div>
                         </div>
                         <div v-if="selectedManuscriptAttachments.length" class="ps-17 ps-md-19">
                             <ul class="service-modal-list">
                                 <li v-for="item in selectedManuscriptAttachments" :key="item"
                                     class="d-flex align-items-start gap-2">
-                                    <i style="margin-top: 2px;"
-                                        class="ri-file-text-fill text-myprimary fs-3"></i>
+                                    <i style="margin-top: 2px;" class="ri-file-text-fill text-myprimary fs-3"></i>
                                     <span class="fs-5 text-gray-600 fw-semibold">{{ item }}</span>
                                 </li>
                             </ul>
@@ -656,7 +697,8 @@
 
                         <div v-if="selectedManuscriptSubmissionMethods.length"
                             class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
-                            <i class="ri-telegram-2-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <i
+                                class="ri-telegram-2-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                             <div>
                                 <h2 class="text-dark fw-bolder fs-3 mb-2">Metode Pengiriman</h2>
                                 <span class="text-gray-600 fs-5 fw-semibold">Pastikan pengiriman naskah sesuai.</span>
@@ -675,7 +717,8 @@
 
                         <div v-if="selectedManuscriptDocuments.length"
                             class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
-                            <i class="ri-file-download-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <i
+                                class="ri-file-download-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
                             <div>
                                 <h2 class="text-dark fw-bolder fs-3 mb-2">File Terlampir</h2>
                                 <span class="text-gray-600 fs-5 fw-semibold">Unduh contoh dokumen yang tersedia.</span>
@@ -684,19 +727,19 @@
                         <div v-if="selectedManuscriptDocuments.length" class="ps-18 ps-md-20">
                             <div class="d-flex flex-column gap-4">
                                 <a v-for="document in selectedManuscriptDocuments"
-                                    :key="document.path || document.url || document.name"
-                                    :href="document.url"
-                                    target="_blank"
-                                    rel="noopener"
+                                    :key="document.path || document.url || document.name" :href="document.url"
+                                    target="_blank" rel="noopener"
                                     class="d-flex align-items-center justify-content-between gap-4 border border-gray-300 rounded-3 p-5">
                                     <span class="d-flex align-items-center gap-3 flex-fill">
                                         <i class="ri-file-text-fill text-myprimary fs-1"></i>
                                         <span class="min-w-0">
-                                            <span class="d-block text-dark fw-bolder fs-6 text-truncate-1 text-truncate mw-200px mw-md-300px">
+                                            <span
+                                                class="d-block text-dark fw-bolder fs-6 text-truncate-1 text-truncate mw-200px mw-md-300px">
                                                 {{ document.name }}
                                             </span>
                                             <span class="d-block text-gray-600 fs-7 fw-semibold mt-1">
-                                                {{ document.extension?.toUpperCase() || 'FILE' }} • {{ formatFileSize(document.size) }}
+                                                {{ document.extension?.toUpperCase() || 'FILE' }} • {{
+                                                    formatFileSize(document.size) }}
                                             </span>
                                         </span>
                                     </span>
@@ -709,6 +752,50 @@
                             <span class="fw-bolder me-1">Kirim Naskah</span>
                             <i class="ri-arrow-right-up-line fw-bold fs-2"></i>
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="testimonialDetailModal" class="modal fade" tabindex="-1" aria-labelledby="testimonialDetailModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-6 mw-600px mx-auto">
+                <div class="modal-content rounded-4">
+                    <div v-if="selectedTestimonial" class="modal-body p-8 position-relative">
+                        <button type="button"
+                            class="cursor-pointer btn btn-icon btn-lg btn-mydark position-absolute top-0 end-0 m-4 rounded-circle z-index-3"
+                            data-bs-dismiss="modal" aria-label="Close">
+                            <i class="cursor-pointer ri-close-large-line text-white fs-1"></i>
+                        </button>
+                        <div v-if="selectedTestimonial.image"
+                            class="ratio mx-auto mb-6 mt-2 ratio-1x1 w-90px h-90px rounded-pill overflow-hidden">
+                            <img :src="selectedTestimonial.image" :alt="selectedTestimonial.name"
+                                class="img-fluid object-fit-cover w-100 h-100">
+                        </div>
+                        <h2 id="testimonialDetailModalTitle" class="fs-2x text-dark text-center fw-bolder mb-2">
+                            {{ selectedTestimonial.name }}
+                        </h2>
+                        <p class="text-gray-600 text-center fs-5 fw-semibold mb-0">
+                            {{ selectedTestimonial.position }}
+                        </p>
+                        <div class="d-flex justify-content-center gap-1 mt-4">
+                            <i v-for="star in ratingStars(selectedTestimonial.rating)"
+                                :key="`selected-testimonial-star-${star}`" class="ri-star-fill text-myprimary fs-1"></i>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-5 mb-4 mt-7 pt-7 border-top border-gray-300">
+                            <i
+                                class="ri-chat-quote-fill p-3 rounded-pill bg-myprimary-light fs-2x text-myprimary fs-2"></i>
+                            <div>
+                                <h2 class="text-dark fw-bolder fs-3 mb-2">Detail Testimoni</h2>
+                                <span class="text-gray-600 fs-5 fw-semibold">Ulasan lengkap dari klien.</span>
+                            </div>
+                        </div>
+                        <div class="ps-17 ps-md-19">
+                            <p class="testimonial-modal-message text-dark fs-5 fw-semibold lh-lg mb-0">
+                                {{ selectedTestimonial.message || 'Testimoni belum tersedia.' }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -802,7 +889,7 @@ export default {
         const pageTitle = computed(() => props.setting?.meta_title || props.setting?.site_title || 'Pustaka Riyadz');
         const heroHeading = computed(() => safeHeroSection.value.heading || props.setting?.site_title || 'Pustaka Riyadz');
         const heroSubheading = computed(() => safeHeroSection.value.subheading || props.setting?.meta_description || '');
-        const heroImage = computed(() => safeHeroSection.value.image || '/assets/media/illustrations/img-books.png');
+        const heroImage = computed(() => safeHeroSection.value.image || '');
 
         const bookSliderModules = [A11y, Autoplay, Navigation, Pagination];
         const bookModalModules = [A11y, Pagination];
@@ -862,17 +949,23 @@ export default {
         const selectedBook = ref(null);
         const selectedService = ref(null);
         const selectedManuscriptCategory = ref(null);
+        const selectedTestimonial = ref(null);
         let originalBodyOverflow = '';
         let serviceModalInstance = null;
         let serviceModalElement = null;
         let manuscriptCategoryModalInstance = null;
         let manuscriptCategoryModalElement = null;
+        let testimonialModalInstance = null;
+        let testimonialModalElement = null;
         const isAnyModalOpen = computed(() => Boolean(selectedBook.value));
         const handleServiceModalHidden = () => {
             selectedService.value = null;
         };
         const handleManuscriptCategoryModalHidden = () => {
             selectedManuscriptCategory.value = null;
+        };
+        const handleTestimonialModalHidden = () => {
+            selectedTestimonial.value = null;
         };
 
         const selectedBookImages = computed(() => {
@@ -1043,6 +1136,19 @@ export default {
             manuscriptCategoryModalInstance.show();
         };
 
+        const openTestimonialModal = async (testimonial) => {
+            selectedTestimonial.value = testimonial;
+
+            await nextTick();
+
+            if (!testimonialModalElement || !window.bootstrap?.Modal) {
+                return;
+            }
+
+            testimonialModalInstance = window.bootstrap.Modal.getOrCreateInstance(testimonialModalElement);
+            testimonialModalInstance.show();
+        };
+
         const goToBook = (book) => {
             if (book?.slug) {
                 router.visit(`/books/${book.slug}`);
@@ -1075,6 +1181,15 @@ export default {
             }
 
             selectedManuscriptCategory.value = null;
+        };
+
+        const closeTestimonialModal = () => {
+            if (testimonialModalInstance) {
+                testimonialModalInstance.hide();
+                return;
+            }
+
+            selectedTestimonial.value = null;
         };
 
         const handleModalKeydown = (event) => {
@@ -1128,8 +1243,10 @@ export default {
             if (typeof document !== 'undefined') {
                 serviceModalElement = document.getElementById('serviceDetailModal');
                 manuscriptCategoryModalElement = document.getElementById('manuscriptCategoryModal');
+                testimonialModalElement = document.getElementById('testimonialDetailModal');
                 serviceModalElement?.addEventListener('hidden.bs.modal', handleServiceModalHidden);
                 manuscriptCategoryModalElement?.addEventListener('hidden.bs.modal', handleManuscriptCategoryModalHidden);
+                testimonialModalElement?.addEventListener('hidden.bs.modal', handleTestimonialModalHidden);
             }
         });
 
@@ -1144,10 +1261,12 @@ export default {
                 document.body.style.overflow = originalBodyOverflow;
                 serviceModalElement?.removeEventListener('hidden.bs.modal', handleServiceModalHidden);
                 manuscriptCategoryModalElement?.removeEventListener('hidden.bs.modal', handleManuscriptCategoryModalHidden);
+                testimonialModalElement?.removeEventListener('hidden.bs.modal', handleTestimonialModalHidden);
             }
 
             serviceModalInstance?.dispose();
             manuscriptCategoryModalInstance?.dispose();
+            testimonialModalInstance?.dispose();
         });
 
         const overviewStats = computed(() => [
@@ -1217,7 +1336,7 @@ export default {
                 return '#contact';
             }
 
-            const message = encodeURIComponent('Halo, saya ingin konsultasi ...');
+            const message = encodeURIComponent('Halo Pustaka Riyadz, saya ingin konsultasi gratis untuk mendapatkan informasi harga promo dan diskon bulan ini. Mohon bantuannya.');
             return `https://wa.me/${whatsappNumber.value}?text=${message}`;
         });
 
@@ -1375,18 +1494,6 @@ export default {
             return Array.from({ length: value }, (_, index) => index + 1);
         };
 
-        const setFallbackImage = (event, type = 'default') => {
-            const fallbacks = {
-                avatar: '/assets/media/illustrations/img-book.jpeg',
-                book: '/assets/media/illustrations/img-book.png',
-                hero: '/assets/media/illustrations/img-books.png',
-                service: '/assets/media/illustrations/img-hero.png',
-                default: '/assets/media/illustrations/empty.png',
-            };
-
-            event.target.src = fallbacks[type] || fallbacks.default;
-        };
-
         return {
             activeFaq,
             pageTitle,
@@ -1414,6 +1521,7 @@ export default {
             selectedBook,
             selectedService,
             selectedManuscriptCategory,
+            selectedTestimonial,
             selectedBookImages,
             selectedBookDetails,
             selectedBookDescription,
@@ -1448,10 +1556,11 @@ export default {
             closeServiceModal,
             openManuscriptCategoryModal,
             closeManuscriptCategoryModal,
+            openTestimonialModal,
+            closeTestimonialModal,
             openBookModal,
             closeBookModal,
             ratingStars,
-            setFallbackImage,
         };
     }
 }
@@ -1707,16 +1816,29 @@ export default {
     width: 8px;
     height: 8px;
     margin: 0 !important;
-    background: var(--slate-200);
     opacity: 1;
     transition: width 0.2s ease, background 0.2s ease;
 }
 
-.book-slider-pagination :deep(.swiper-pagination-bullet-active),
+.book-slider-pagination :deep(.swiper-pagination-bullet) {
+    background: var(--base-color-300);
+}
+
+.blog-slider-pagination :deep(.swiper-pagination-bullet) {
+    background: var(--slate-200);
+}
+
 .blog-slider-pagination :deep(.swiper-pagination-bullet-active) {
     width: 24px;
     border-radius: 999px;
-    background: var(--base-color-500);
+}
+
+.book-slider-pagination :deep(.swiper-pagination-bullet-active) {
+    background: var(--bs-white) !important;
+}
+
+.blog-slider-pagination :deep(.swiper-pagination-bullet-active) {
+    background: var(--base-color-500) !important;
 }
 
 .book-modal-trigger {
@@ -2123,6 +2245,7 @@ export default {
 }
 
 .testimonial-marquee {
+    --testimonial-marquee-fade: color-mix(in srgb, var(--base-color-500) 100%, transparent);
     position: relative;
     overflow: hidden;
 }
@@ -2141,19 +2264,19 @@ export default {
 .testimonial-marquee::before {
     left: 0;
     background:
-        linear-gradient(90deg, rgba(248, 250, 252, 1) 0%, rgba(248, 250, 252, 0) 100%);
+        linear-gradient(90deg, var(--testimonial-marquee-fade) 0%, transparent 100%);
 }
 
 .testimonial-marquee::after {
     right: 0;
     background:
-        linear-gradient(270deg, rgba(248, 250, 252, 1) 0%,  rgba(248, 250, 252, 0) 100%);
+        linear-gradient(270deg, var(--testimonial-marquee-fade) 0%, transparent 100%);
 }
 
 .testimonial-marquee-track {
     display: flex;
     width: max-content;
-    animation: testimonialMarquee 32s linear infinite;
+    animation: testimonialMarquee 90s linear infinite;
     will-change: transform;
 }
 
@@ -2165,6 +2288,22 @@ export default {
     display: flex;
     flex-shrink: 0;
     gap: 1.5rem;
+}
+
+.testimonial-card {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.testimonial-card:hover,
+.testimonial-card:focus-visible {
+    border-color: var(--base-color-300) !important;
+    box-shadow: var(--landing-shadow-hover);
+    transform: translateY(-3px);
+}
+
+.testimonial-card:focus-visible {
+    outline: 2px solid var(--base-color-500);
+    outline-offset: 4px;
 }
 
 .testimonial-message {
@@ -2188,6 +2327,10 @@ export default {
 .testimonial-name {
     color: var(--landing-ink);
     font-size: 0.95rem;
+}
+
+.testimonial-modal-message {
+    white-space: pre-line;
 }
 
 .blog-card {
@@ -2223,6 +2366,16 @@ export default {
 
 .faq-answer-content :deep(p:last-child) {
     margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+
+    .faq-heading-sticky,
+    .contact-card-sticky {
+        position: sticky;
+        top: 128px;
+        align-self: flex-start;
+    }
 }
 
 .contact-heading {
@@ -2551,7 +2704,7 @@ export default {
     }
 
     .testimonial-marquee-track {
-        animation-duration: 26s;
+        animation-duration: 90s;
     }
 
     .book-swiper {
